@@ -1,0 +1,266 @@
+.medievalsharp-regular {
+    font-family: "MedievalSharp", cursive;
+    font-weight: 400;
+    font-style: normal;
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    background-image: url("https://wallpapers.com/images/hd/old-paper-texture-parchment-grodfr8ezxzzei6l.jpg")
+}
+
+
+#header {
+    background-color: blueviolet;
+    font-size: larger;
+    font-family: "MedievalSharp";
+    padding: 0px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    width: 100%; 
+}
+
+#logo {
+    width: 150px;
+    height: 120px;
+}
+
+nav {
+    display: flex;
+}
+
+nav a {
+    font-size: 23px;
+    color: white;
+    margin-left: 20px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: black
+}
+#header2 {
+    background-color: brown;
+    text-align: center;
+    padding: 5px 0; 
+    color: white;
+    width: 100%; 
+}
+main{
+    background-image: url("https://wallpapers.com/images/hd/old-paper-texture-parchment-grodfr8ezxzzei6l.jpg")
+}
+#legenda {
+    text-align: center;
+    font-size: 40px;
+    font-family: "MedievalSharp";
+}
+#lista-carrinho {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 30px;
+}
+
+.card {
+    display: flex;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    align-items: center;
+    padding: 10px;
+
+}
+
+.card img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin-right: 20px;
+}
+
+.item-carrinho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #eee;
+    padding: 15px;
+    margin: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    font-family: "MedievalSharp";
+
+}
+
+.item-carrinho img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-right: 15px;
+}
+
+.card-info {
+    flex-grow: 1;
+}
+
+.card-info p {
+    margin: 5px 0;
+}
+
+.remover-item {
+    background-color: crimson;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.remover-item:hover {
+    background-color: darkred;
+}
+#opcoes-entrega {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.btn-entrega, .btn-retirada {
+    background-color: blueviolet;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    width: 200px;
+    transition: background-color 0.3s;
+}
+
+.btn-entrega:hover, .btn-retirada:hover {
+    background-color: darkviolet
+}
+
+.btn-entrega:focus, .btn-retirada:focus {
+    outline: none;
+}
+
+#total-carrinho {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 30px;
+}
+#formulario-entrega {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    font-size: 18px;
+}
+
+#formulario-entrega label {
+    display: block;
+    margin-bottom: 15px;
+}
+
+#formulario-entrega input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+#formulario-entrega button {
+    padding: 12px 20px;
+    margin-right: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#formulario-entrega button[type="submit"] {
+    background-color: blueviolet;
+    color: white;
+}
+
+#formulario-entrega button#voltar {
+    background-color: #ccc;
+    color: black;
+}
+#resumo-pedido {
+    display: none;
+    justify-content: space-between;
+    padding: 30px 20px;
+    font-size: 20px;
+    margin-top: 30px;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    line-height: 1.8;
+    font-family: "MedievalSharp";
+
+}
+
+#dados-usuario, #detalhes-pedido {
+    width: 48%;
+}
+
+#detalhes-pedido {
+    text-align: right;
+}
+
+#detalhes-pedido p {
+    margin-bottom: 10px;
+}
+#botoes-finalizacao {
+    display: flex;
+    justify-content: center;
+    margin: 20px 20px 0 20px;
+}
+
+.botao_altera {
+    background-color: green;
+    color: white;
+    padding: 15px 30px;
+    font-size: 20px;
+    border: none;
+    border-radius: 15px;
+    text-decoration: none;
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.botao_altera:hover {
+    background-color: darkgreen;
+}
+#final {
+    background-color: blueviolet;
+    font-size: larger;
+    padding: 30px 10px;
+    color: black;
+    text-align: left;
+    margin-top: 20px;
+    font-family: "MedievalSharp";
+
+}
+#final a {
+    color: white;
+}
+
+

@@ -1,0 +1,255 @@
+.medievalsharp-regular {
+    font-family: "MedievalSharp", cursive;
+    font-weight: 400;
+    font-style: normal;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    font-family: "MedievalSharp";
+    background-color: #f9f4ea;
+    margin: 0;
+    padding: 0;
+    background-image: url("https://wallpapers.com/images/hd/old-paper-texture-parchment-grodfr8ezxzzei6l.jpg")
+}
+
+
+#header {
+    background-color: blueviolet;
+    font-size: larger;
+    padding: 0px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    width: 100%;
+    font-family: "MedievalSharp";
+ 
+}
+
+#logo {
+    width: 150px;
+    height: 120px;
+}
+
+nav {
+    display: flex;
+}
+
+nav a {
+    font-size: 23px;
+    color: white;
+    margin-left: 20px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: black
+}
+
+#header2 {
+    background-color: brown;
+    text-align: center;
+    padding: 5px 0; 
+    color: white;
+    width: 100%; 
+}
+
+
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #fff8e1;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    text-align: center;
+}
+
+#valor-total {
+    font-size: 2em;
+    font-weight: bold;
+    margin-top: 20px;
+    color: green;
+    text-align: center;
+    background-color: #f9f4ea;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.valor-total {
+    color: green;
+    font-size: 2em;
+    font-weight: bold;
+    margin-top: 20px;
+    text-align: center;
+}
+
+
+#botao_volta {
+    display: flex;
+    justify-content: center;
+    margin: 20px 20px 0 20px;
+}
+
+.botao_carrinho {
+    background-color: green;
+    color: white;
+    padding: 15px 30px;
+    font-size: 20px;
+    border: none;
+    border-radius: 15px;
+    text-decoration: none;
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.botao_altera:hover {
+    background-color: darkgreen;
+}
+
+#opcoes-pagamento {
+    margin-top: 30px;
+    text-align: left;
+}
+
+.opcao {
+    display: block;
+    margin: 10px 0;
+    font-size: 1.1em;
+}
+
+#formularios-pagamento {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #fff8e1;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.formulario {
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #f9f4ea;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.formulario p {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+}
+
+.formulario input[type="text"], 
+.formulario input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.formulario input[type="radio"] {
+    margin-right: 10px;
+}
+
+.formulario label {
+    font-size: 1em;
+    margin-right: 15px;
+}
+
+.formulario .botoes-final {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.formulario .botao_carrinho, 
+.formulario .botao_confirmar {
+    width: 48%;
+    padding: 10px;
+    font-size: 1.1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.formulario .botao_carrinho {
+    background-color: green;
+    color: white;
+    text-align: center;
+}
+
+.formulario .botao_carrinho:hover {
+    background-color: darkgreen;
+}
+
+.formulario .botao_confirmar {
+    background-color: blueviolet;
+    color: white;
+    text-align: center;
+}
+
+.formulario .botao_confirmar:hover {
+    background-color: darkviolet;
+}
+
+.formulario input[type="number"] {
+    display: none;
+}
+
+#qr-code {
+    display: block;
+    margin-top: 10px;
+    max-width: 200px;
+}
+
+#form-dinheiro input[type="number"] {
+    display: none;
+}
+button.botao_qr {
+    background-color: #6e4b3b;
+    color: #fff;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    font-family: 'Arial', sans-serif;
+}
+
+button.botao_qr:hover {
+    background-color: #9f7c6f;
+    transform: scale(1.05);
+}
+
+button.botao_qr:active {
+    background-color: #4b372b;
+    transform: scale(0.98);
+}
+
+
+#final {
+    background-color: blueviolet;
+    font-size: larger;
+    padding: 30px 10px;
+    color: black;
+    text-align: left;
+    margin-top: 20px;
+    font-family: "MedievalSharp";
+
+}
+#final a {
+    color: white;
+}

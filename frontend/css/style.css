@@ -1,0 +1,189 @@
+.medievalsharp-regular {
+    font-family: "MedievalSharp", cursive;
+    font-weight: 400;
+    font-style: normal;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    background-image: url("https://wallpapers.com/images/hd/old-paper-texture-parchment-grodfr8ezxzzei6l.jpg")
+
+}
+
+
+#header {
+    font-family: "MedievalSharp";
+    background-color: blueviolet;
+    font-size: larger;
+    padding: 0px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    width: 100%; 
+}
+
+#logo {
+    width: 150px;
+    height: 120px;
+}
+
+nav {
+    display: flex;
+}
+
+nav a {
+    font-size: 23px;
+    color: white;
+    margin-left: 20px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: black
+}
+
+#header2 {
+    background-color: brown;
+    text-align: center;
+    padding: 5px 0; 
+    color: white;
+    width: 100%; 
+}
+main {
+    background-image: url("https://wallpapers.com/images/hd/old-paper-texture-parchment-grodfr8ezxzzei6l.jpg")
+}
+#legenda {
+    font-family: "MedievalSharp";
+    text-align: center;
+    font-size: 40px
+}
+#produtosContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 30px;
+}
+
+.card {
+    font-family: "MedievalSharp";
+    display: flex;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    align-items: center;
+    padding: 10px;
+    min-height: 120px;
+}
+
+.card img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-right: 15px;
+}
+
+.card-info {
+    flex-grow: 1;
+}
+
+.card-info h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.card-info p {
+    margin-top: 5px;
+    color: #555;
+}
+
+.card-preco {
+    font-weight: bold;
+    font-size: 18px;
+    color: #2c2c2c;
+    margin-left: 20px;
+    white-space: nowrap;
+}
+.quantidade {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+
+.quantidade button {
+    background-color: blueviolet;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.quantidade button:hover {
+    background-color: darkviolet;
+}
+
+.btn-mais,
+.btn-menos {
+    background-color: #6a5acd;
+    color: white;
+    border: none;
+    padding: 4px 10px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.contador {
+    font-weight: bold;
+    font-size: 16px;
+}
+.botao-carrinho-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 20px 20px 0 20px;
+}
+
+.botao-carrinho {
+    background-color: green;
+    color: white;
+    padding: 15px 30px;
+    font-size: 20px;
+    border: none;
+    border-radius: 15px;
+    text-decoration: none;
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.botao-carrinho:hover {
+    background-color: darkgreen;
+}
+
+#final {
+    background-color: blueviolet;
+    font-size: larger;
+    padding: 30px 10px;
+    color: black;
+    text-align: left;
+    margin-top: 20px;
+    font-family: "MedievalSharp";
+
+}
+#final a {
+    color: white;
+}
+
+

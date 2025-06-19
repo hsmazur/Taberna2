@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taberna do Dragão</title>
+    <link rel="stylesheet" href="./css/pagamento.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header id="header"> 
+        <img id="logo" src="img/logo.png" alt="">
+        <div>
+            <h1>Taberna do Dragão</h1>
+            <h2>Alimentando o reino desde 2025!</h2>
+        </div>
+        <nav>
+            <a href="#sobre">Sobre</a>
+            <a href="#contato">Contato</a>
+            <a href="#siga">Siga-nos!</a>
+        </nav>
+    </header>
+    <header id="header2">
+        <h3>Rua Zézinho da Silva, 123 - Centro</h3>
+    </header>
+    <main class="container">
+        <h1>Finalizar Pagamento</h1>
+
+        <div id="valor-total" class="valor-total"></div>
+
+        <div id="botao_volta">
+            <a href="carrinho.html" class="botao_carrinho">Voltar ao Carrinho </a>
+        </div> 
+
+        <div id="opcoes-pagamento">
+            <h2>Escolha a forma de pagamento:</h2>
+            <label class="opcao"><input type="radio" name="pagamento" value="dinheiro"> Dinheiro</label>
+            <label class="opcao"><input type="radio" name="pagamento" value="pix"> PIX</label>
+            <label class="opcao"><input type="radio" name="pagamento" value="debito"> Cartão de Débito</label>
+        </div>
+        
+        <div id="area-formularios">
+            
+        </div>
+    </main>
+
+    <script src="./js/pagamento.js"></script>
+
+    <section id="final">
+        <h3 id="sobre">Sobre: Bem-vindo à Taberna do Dragão, o lugar onde lendas e sabores se encontram para criar uma experiência única para o seu paladar. Fundada em 2025, nossa taberna é um refúgio de bons comeres e bebidas, inspirados nos antigos banquetes do reino. Aqui, o fogo da forja nunca se apaga e o aroma dos nossos lanches artesanais e das poções encantadas vai te transportar diretamente para as terras místicas do nosso mundo medieval. <br><br>
+        Aqui na Taberna do Dragão, a comida não é só para sustentar o corpo, mas também para alimentar a alma. Cada mordida conta uma história, e cada gole traz o sabor das terras distantes que inspiraram nossa taberna. Junte-se a nós, aventureiro! O banquete está servido, e o reino te aguarda!</h3><br>
+        <h3 id="contato">Contato: (44) 912345-6789</h3><br>
+        <h3 id="siga">Siga-nos! <a href="https://www.instagram.com/hugo.mazur/">@tabernadragao</a></h3>
+    </section>
+</body>
+</html>
