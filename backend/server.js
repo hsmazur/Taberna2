@@ -9,111 +9,101 @@ app.use(cors());
 app.use(express.json());
 
 // Arquivos CSV
+const CSV_PRODUTOS = 'produtos.csv';
 const CSV_CARRINHO = 'carrinho.csv';
 const CSV_PEDIDOS = 'pedidos.csv';
-const CSV_PRODUTOS = 'produtos.csv';
 
-// Inicializa arquivos CSV (se não existirem)
-if (!fs.existsSync(CSV_CARRINHO)) {
-    fs.writeFileSync(CSV_CARRINHO, 'produto,quantidade\n');
-}
-
-if (!fs.existsSync(CSV_PEDIDOS)) {
-    fs.writeFileSync(CSV_PEDIDOS, 'metodoPagamento,total,data\n');
-}
-
-if (!fs.existsSync(CSV_PRODUTOS)) {
-    // Popula com os produtos padrão (opcional)
+// Inicializa arquivos CSV se não existirem
+const inicializarCSVs = () => {
+  if (!fs.existsSync(CSV_PRODUTOS)) {
     const produtos = [
-        { nome: "Burger do Camponês", preco: 21.90, imagem: "img/lanche1.png", ingredientes: "Pão rústico, hambúrguer bovino, queijo curado" },
-        // ... (outros produtos)
+      { imagem: 'img/lanche1.png', nome: 'Burger do Camponês', ingredientes: 'Pão rústico, hambúrguer bovino, queijo curado', preco: 21.90 },
+      // ... (adicione todos os 12 lanches aqui)
     ];
     const ws = fs.createWriteStream(CSV_PRODUTOS);
     csv.writeToStream(ws, produtos, { headers: true });
-}
+  }
 
-// ==============================================
-// Rotas do Carrinho
-// ==============================================
-
-// GET /carrinho → Retorna todos os itens
-app.get('/carrinho', (req, res) => {
-    const dados = [];
-    fs.createReadStream(CSV_CARRINHO)
-        .pipe(csv.parse({ headers: true }))
-        .on('data', (row) => dados.push(row))
-        .on('end', () => res.json(dados));
-});
-
-// POST /carrinho → Adiciona/atualiza/remove item
-app.post('/carrinho', (req, res) => {
-    const { produto, quantidade } = req.body;
-    const dados = [];
-
-    fs.createReadStream(CSV_CARRINHO)
-        .pipe(csv.parse({ headers: true }))
-        .on('data', (row) => dados.push(row))
-        .on('end', () => {
-            // Remove se quantidade <= 0, atualiza ou adiciona
-            const novosDados = quantidade <= 0
-                ? dados.filter(item => item.produto !== produto)
-                : dados.map(item => item.produto === produto ? { produto, quantidade } : item);
-
-            if (quantidade > 0 && !novosDados.some(item => item.produto === produto)) {
-                novosDados.push({ produto, quantidade });
-            }
-
-            // Reescreve o CSV
-            const ws = fs.createWriteStream(CSV_CARRINHO);
-            csv.writeToStream(ws, novosDados, { headers: true })
-                .on('finish', () => res.json({ success: true }));
-        });
-});
-
-// DELETE /carrinho → Limpa o carrinho
-app.delete('/carrinho', (req, res) => {
+  if (!fs.existsSync(CSV_CARRINHO)) {
     fs.writeFileSync(CSV_CARRINHO, 'produto,quantidade\n');
-    res.json({ success: true });
-});
+  }
 
-// ==============================================
-// Rotas de Produtos (opcional)
-// ==============================================
+  if (!fs.existsSync(CSV_PEDIDOS)) {
+    fs.writeFileSync(CSV_PEDIDOS, 'data,metodoPagamento,total,itens\n');
+  }
+};
 
-// GET /produtos → Retorna o cardápio
+inicializarCSVs();
+
+// ================== ROTAS ================== //
+
+// 1. Cardápio (GET /produtos)
 app.get('/produtos', (req, res) => {
-    const dados = [];
-    fs.createReadStream(CSV_PRODUTOS)
-        .pipe(csv.parse({ headers: true }))
-        .on('data', (row) => dados.push(row))
-        .on('end', () => res.json(dados));
+  const produtos = [];
+  fs.createReadStream(CSV_PRODUTOS)
+    .pipe(csv.parse({ headers: true }))
+    .on('data', (row) => produtos.push(row))
+    .on('end', () => res.json(produtos));
 });
 
-// ==============================================
-// Rotas de Pedidos (opcional)
-// ==============================================
+// 2. Carrinho (GET/POST/DELETE /carrinho)
+app.get('/carrinho', (req, res) => {
+  const itens = [];
+  fs.createReadStream(CSV_CARRINHO)
+    .pipe(csv.parse({ headers: true }))
+    .on('data', (row) => itens.push(row))
+    .on('end', () => res.json(itens));
+});
 
-// POST /pedidos → Salva um pedido finalizado
+app.post('/carrinho', (req, res) => {
+  const { produto, quantidade } = req.body;
+  let dados = [];
+
+  fs.createReadStream(CSV_CARRINHO)
+    .pipe(csv.parse({ headers: true }))
+    .on('data', (row) => dados.push(row))
+    .on('end', () => {
+      // Atualiza ou remove item
+      dados = quantidade <= 0
+        ? dados.filter(item => item.produto !== produto)
+        : dados.map(item => item.produto === produto ? { produto, quantidade } : item);
+
+      // Adiciona novo item se necessário
+      if (quantidade > 0 && !dados.some(item => item.produto === produto)) {
+        dados.push({ produto, quantidade });
+      }
+
+      // Salva no CSV
+      const ws = fs.createWriteStream(CSV_CARRINHO);
+      csv.writeToStream(ws, dados, { headers: true })
+        .on('finish', () => res.json({ success: true }));
+    });
+});
+
+// 3. Pedidos (POST /pedidos)
 app.post('/pedidos', (req, res) => {
-    const pedido = req.body;
-    const ws = fs.createWriteStream(CSV_PEDIDOS, { flags: 'a' });
-    csv.writeToStream(ws, [pedido], { headers: !fs.existsSync(CSV_PEDIDOS) });
-    res.json({ success: true });
+  const { metodoPagamento, total, itens } = req.body;
+  const novoPedido = {
+    data: new Date().toISOString(),
+    metodoPagamento,
+    total,
+    itens: JSON.stringify(itens) // Salva como string
+  };
+
+  const ws = fs.createWriteStream(CSV_PEDIDOS, { flags: 'a' });
+  csv.writeToStream(ws, [novoPedido], { headers: !fs.existsSync(CSV_PEDIDOS) || fs.statSync(CSV_PEDIDOS).size === 0 })
+    .on('finish', () => res.json({ success: true }));
 });
 
-// GET /pedidos → Retorna histórico (opcional)
-app.get('/pedidos', (req, res) => {
-    const dados = [];
-    fs.createReadStream(CSV_PEDIDOS)
-        .pipe(csv.parse({ headers: true }))
-        .on('data', (row) => dados.push(row))
-        .on('end', () => res.json(dados));
-});
+// Servir arquivos estáticos (HTML/CSS/JS/IMG)
+app.use(express.static('../frontend'));
 
-// ==============================================
 // Inicia o servidor
-// ==============================================
 const PORT = 3000;
 app.listen(PORT, () => {
-    console.log(`Servidor rodando em http://localhost:${PORT}`);
+  console.log(`🛡️ Servidor da Taberna rodando em http://localhost:${PORT}`);
+  console.log(`📊 Rotas disponíveis:`);
+  console.log(`- GET /produtos (Cardápio)`);
+  console.log(`- GET/POST /carrinho (Carrinho)`);
+  console.log(`- POST /pedidos (Finalização)`);
 });
