@@ -1,266 +1,313 @@
-.medievalsharp-regular {
-    font-family: "MedievalSharp", cursive;
-    font-weight: 400;
-    font-style: normal;
-}
-*{
+/* Estilos Gerais - Temática Medieval */
+body {
+    font-family: 'MedievalSharp', cursive;
+    background-color: #f5ecd7;
+    background-image: url('../img/papel-parede-medieval.jpg');
+    background-attachment: fixed;
+    color: #3a3226;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-}
-body {
-    background-image: url("https://wallpapers.com/images/hd/old-paper-texture-parchment-grodfr8ezxzzei6l.jpg")
+    line-height: 1.6;
 }
 
-
+/* Cabeçalho */
 #header {
-    background-color: blueviolet;
-    font-size: larger;
-    font-family: "MedievalSharp";
-    padding: 0px 20px;
+    background-color: #1a120b;
+    color: #d4a76a;
+    padding: 1rem;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-    width: 100%; 
+    border-bottom: 3px solid #d4a76a;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 #logo {
-    width: 150px;
-    height: 120px;
-}
-
-nav {
-    display: flex;
-}
-
-nav a {
-    font-size: 23px;
-    color: white;
-    margin-left: 20px;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-nav a:hover {
-    color: black
-}
-#header2 {
-    background-color: brown;
-    text-align: center;
-    padding: 5px 0; 
-    color: white;
-    width: 100%; 
-}
-main{
-    background-image: url("https://wallpapers.com/images/hd/old-paper-texture-parchment-grodfr8ezxzzei6l.jpg")
-}
-#legenda {
-    text-align: center;
-    font-size: 40px;
-    font-family: "MedievalSharp";
-}
-#lista-carrinho {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding: 30px;
-}
-
-.card {
-    display: flex;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    align-items: center;
-    padding: 10px;
-
-}
-
-.card img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
+    height: 80px;
     margin-right: 20px;
+}
+
+#header h1 {
+    margin: 0;
+    font-size: 2.2rem;
+    text-shadow: 2px 2px 4px #000;
+}
+
+#header h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: normal;
+    color: #d4a76a;
+}
+
+#header2 {
+    background-color: #3a3226;
+    color: #d4a76a;
+    padding: 0.5rem;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+/* Container Principal */
+main {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background-color: rgba(255, 253, 245, 0.9);
+    border: 2px solid #3a3226;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(58, 50, 38, 0.4);
+}
+
+#legenda {
+    font-size: 2rem;
+    text-align: center;
+    margin: 1rem 0;
+    color: #1a120b;
+    border-bottom: 2px solid #d4a76a;
+    padding-bottom: 0.5rem;
+}
+
+/* Lista de Itens */
+#lista-carrinho {
+    margin: 1rem 0;
 }
 
 .item-carrinho {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #eee;
-    padding: 15px;
-    margin: 10px 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    font-family: "MedievalSharp";
+    gap: 1.5rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    background-color: #fff9e6;
+    border: 1px solid #d4a76a;
+    border-radius: 8px;
+    position: relative;
+    transition: all 0.3s ease;
+}
 
+.item-carrinho:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(58, 50, 38, 0.2);
 }
 
 .item-carrinho img {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     object-fit: cover;
-    border-radius: 10px;
-    margin-right: 15px;
-}
-
-.card-info {
-    flex-grow: 1;
-}
-
-.card-info p {
-    margin: 5px 0;
-}
-
-.remover-item {
-    background-color: crimson;
-    color: white;
-    border: none;
-    padding: 8px 12px;
+    border: 2px solid #3a3226;
     border-radius: 8px;
+    box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.item-info {
+    flex: 1;
+}
+
+.item-info h3 {
+    margin: 0 0 0.5rem 0;
+    color: #1a120b;
+    font-size: 1.4rem;
+}
+
+.ingredientes {
+    color: #5c4d3d;
+    font-style: italic;
+    margin-bottom: 1rem;
+}
+
+/* Controles de Quantidade */
+.item-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin: 1rem 0;
+}
+
+.item-controls button {
+    background-color: #3a3226;
+    color: #f5ecd7;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 1.2rem;
     cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.item-controls button:hover {
+    background-color: #1a120b;
+    transform: scale(1.1);
+}
+
+.quantidade {
+    min-width: 30px;
+    text-align: center;
     font-weight: bold;
 }
 
-.remover-item:hover {
-    background-color: darkred;
-}
-#opcoes-entrega {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 30px;
-}
-
-.btn-entrega, .btn-retirada {
-    background-color: blueviolet;
+.btn-remover {
+    background-color: #8b0000;
     color: white;
-    padding: 15px 30px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 18px;
-    width: 200px;
-    transition: background-color 0.3s;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    position: absolute;
+    bottom: 1.5rem;
+    right: 1.5rem;
 }
 
-.btn-entrega:hover, .btn-retirada:hover {
-    background-color: darkviolet
+.btn-remover:hover {
+    background-color: #6b0000;
 }
 
-.btn-entrega:focus, .btn-retirada:focus {
-    outline: none;
+/* Preços */
+.preco, .subtotal {
+    font-weight: bold;
+    color: #1a120b;
+    margin: 0.3rem 0;
 }
 
+.subtotal {
+    font-size: 1.1rem;
+    color: #8b0000;
+}
+
+/* Total e Finalização */
 #total-carrinho {
-    text-align: center;
-    font-size: 24px;
-    margin-bottom: 30px;
-}
-#formulario-entrega {
-    max-width: 500px;
-    margin: 40px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    font-size: 18px;
-}
-
-#formulario-entrega label {
-    display: block;
-    margin-bottom: 15px;
-}
-
-#formulario-entrega input {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    font-size: 16px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-}
-
-#formulario-entrega button {
-    padding: 12px 20px;
-    margin-right: 10px;
-    font-size: 16px;
-    border: none;
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background-color: #3a3226;
+    color: #f5ecd7;
     border-radius: 8px;
-    cursor: pointer;
-}
-
-#formulario-entrega button[type="submit"] {
-    background-color: blueviolet;
-    color: white;
-}
-
-#formulario-entrega button#voltar {
-    background-color: #ccc;
-    color: black;
-}
-#resumo-pedido {
-    display: none;
-    justify-content: space-between;
-    padding: 30px 20px;
-    font-size: 20px;
-    margin-top: 30px;
-    background-color: #f9f9f9;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    line-height: 1.8;
-    font-family: "MedievalSharp";
-
-}
-
-#dados-usuario, #detalhes-pedido {
-    width: 48%;
-}
-
-#detalhes-pedido {
     text-align: right;
 }
 
-#detalhes-pedido p {
-    margin-bottom: 10px;
+.resumo-total {
+    font-size: 1.3rem;
 }
+
+.resumo-total strong {
+    color: #d4a76a;
+    font-size: 1.5rem;
+}
+
+.btn-finalizar {
+    display: inline-block;
+    background-color: #1a120b;
+    color: #d4a76a;
+    padding: 0.8rem 2rem;
+    margin-top: 1rem;
+    text-decoration: none;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    transition: all 0.3s;
+    border: 2px solid #d4a76a;
+}
+
+.btn-finalizar:hover {
+    background-color: #d4a76a;
+    color: #1a120b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Estados Especiais */
+.loading {
+    text-align: center;
+    padding: 3rem;
+    font-size: 1.3rem;
+    color: #5c4d3d;
+}
+
+.empty-cart {
+    text-align: center;
+    padding: 3rem;
+}
+
+.empty-cart img {
+    width: 150px;
+    opacity: 0.7;
+    margin-bottom: 1rem;
+}
+
+.empty-cart p {
+    font-size: 1.3rem;
+    color: #5c4d3d;
+}
+
+.error {
+    background-color: #ffebee;
+    border-left: 5px solid #f44336;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    border-radius: 4px;
+}
+
+.error-detail {
+    color: #d32f2f;
+    font-size: 0.9rem;
+}
+
+/* Botões de Navegação */
 #botoes-finalizacao {
     display: flex;
-    justify-content: center;
-    margin: 20px 20px 0 20px;
+    justify-content: space-between;
+    margin-top: 2rem;
 }
 
 .botao_altera {
-    background-color: green;
-    color: white;
-    padding: 15px 30px;
-    font-size: 20px;
-    border: none;
-    border-radius: 15px;
+    background-color: #3a3226;
+    color: #d4a76a;
+    padding: 0.8rem 1.5rem;
     text-decoration: none;
-    width: 100%;
-    max-width: 600px;
-    text-align: center;
-    transition: background-color 0.3s ease;
+    border-radius: 30px;
+    transition: all 0.3s;
+    border: 2px solid #d4a76a;
 }
 
 .botao_altera:hover {
-    background-color: darkgreen;
+    background-color: #d4a76a;
+    color: #1a120b;
 }
+
+/* Rodapé */
 #final {
-    background-color: blueviolet;
-    font-size: larger;
-    padding: 30px 10px;
-    color: black;
-    text-align: left;
-    margin-top: 20px;
-    font-family: "MedievalSharp";
-
+    background-color: #1a120b;
+    color: #d4a76a;
+    padding: 2rem;
+    margin-top: 3rem;
+    text-align: center;
 }
+
+#final h3 {
+    margin: 0.5rem 0;
+}
+
 #final a {
-    color: white;
+    color: #d4a76a;
+    text-decoration: none;
 }
 
+#final a:hover {
+    text-decoration: underline;
+}
 
+/* Responsividade */
+@media (max-width: 768px) {
+    .item-carrinho {
+        flex-direction: column;
+    }
+    
+    .item-carrinho img {
+        width: 100%;
+        height: auto;
+    }
+    
+    .btn-remover {
+        position: static;
+        margin-top: 1rem;
+    }
+}

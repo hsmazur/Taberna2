@@ -12,7 +12,6 @@
 <body>
     <header id="header"> 
         <img id="logo" src="img/logo.png" alt="">
-
         <div>
             <h1>Taberna do Dragão</h1>
             <h2>Alimentando o reino desde 2025!</h2>
@@ -29,13 +28,16 @@
 
     <main>
         <div id="legenda">Carrinho</div>
-        <section id="lista-carrinho"></section>
-        <div id="lista-carrinho"></div>
+        <div id="lista-carrinho" class="container-itens"></div>
+        <div id="total-carrinho" class="container-total"></div>
+
         <div id="opcoes-entrega">
             <button class="btn-entrega">Entrega</button>
             <button class="btn-retirada">Retirada</button>
         </div>
+        
         <div id="formulario-entrega" style="display: none;"></div>
+        
         <div id="resumo-pedido" style="display: none;">
             <div id="dados-usuario">
                 <h3>Dados do Usuário</h3>
@@ -53,20 +55,18 @@
             </div>
         </div>
     </main>
+
     <div id="botoes-finalizacao">
-        <a href="index.html" class="botao_altera"> Voltar ao Cardápio</a>
+        <a href="index.html" class="botao_altera">Voltar ao Cardápio</a>
         <a href="pagamento.html" class="botao_altera">Ir para o Pagamento</a>
-    </div>  
+    </div>
+
     <section id="final">
-        <h3 id="sobre">Sobre: Bem-vindo à Taberna do Dragão, o lugar onde lendas e sabores se encontram para criar uma experiência única para o seu paladar. Fundada em 2025, nossa taberna é um refúgio de bons comeres e bebidas, inspirados nos antigos banquetes do reino. Aqui, o fogo da forja nunca se apaga e o aroma dos nossos lanches artesanais e das poções encantadas vai te transportar diretamente para as terras místicas do nosso mundo medieval. <br> <br>
-            
-            Aqui na Taberna do Dragão, a comida não é só para sustentar o corpo, mas também para alimentar a alma. Cada mordida conta uma história, e cada gole traz o sabor das terras distantes que inspiraram nossa taberna. Junte-se a nós, aventureiro! O banquete está servido, e o reino te aguarda!</h3> <br>
-        <h3 id="contato">Contato: (44) 912345-6789</h3> <br>
+        <h3 id="sobre">Sobre: Bem-vindo à Taberna do Dragão...</h3>
+        <h3 id="contato">Contato: (44) 912345-6789</h3>
         <h3 id="siga">Siga-nos! <a href="https://www.instagram.com/hugo.mazur/">@tabernadragao</a></h3>
     </section>
 
-    <script src="./js/class.js"></script>
     <script src="./js/carrinho.js"></script>
-
 </body>
 </html>

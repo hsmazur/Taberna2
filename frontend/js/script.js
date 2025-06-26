@@ -132,29 +132,19 @@ async function atualizarQuantidade(produtoId, alteracao) {
   }
 }
 
-/**
- * Atualiza todos os contadores na interface
- */
-function atualizarContadores() {
-  Object.keys(carrinho).forEach(produtoId => {
-    const elemento = document.getElementById(`qtd-${produtoId}`);
-    if (elemento) {
-      elemento.textContent = carrinho[produtoId].quantidade;
-    }
-  });
+async function atualizarCarrinho(produtoId, quantidade) {
+    await fetch('/carrinho', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ produtoId, quantidade })
+    });
 }
 
-
-
-/**
- * Calcula total de itens no carrinho
- */
-function calcularTotalItens() {
-  return Object.values(carrinho).reduce(
-    (total, item) => total + item.quantidade, 0
-  );
+async function calcularTotalItens() {
+    const response = await fetch('/carrinho');
+    const itens = await response.json();
+    return itens.reduce((total, item) => total + parseInt(item.quantidade), 0);
 }
-
 // Inicialização
 document.addEventListener('DOMContentLoaded', () => {
   carregarProdutos();
