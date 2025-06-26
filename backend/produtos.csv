@@ -1,0 +1,13 @@
+id,imagem,nome,ingredientes,preco
+1,img/lanche1.png,"Burger do Camponês","Pão rústico, hambúrguer bovino, queijo curado",21.90
+2,img/lanche2.png,"Burger do Cavaleiro","Pão, hambúrguer duplo, bacon defumado, queijo cheddar",28.50
+3,img/lanche3.png,"Burger da Donzela","Pão, hambúrguer de frango grelhado, maionese de alho",23.00
+4,img/lanche4.png,"Burger do Bardo","Pão, hambúrguer de bovino, cebola caramelizada",26.90
+5,img/lanche5.png,"Burger do Ferreiro","Pão australiano, hambúrguer robusto, queijo fundido, molho de pimenta",29.00
+6,img/lanche6.png,"Burger do Alquimista","Pão de especiarias, hambúrguer vegetal, cogumelos mágicos, molho especial",25.50
+7,img/lanche7.png,"Burger do Rei","Pão dourado, hambúrguer de picanha, folhas nobres, queijo brie",34.90
+8,img/lanche8.png,"Burger do Dragão","Pão de carvão, hambúrguer picante, queijo defumado, pimenta vermelha",31.00
+9,img/lanche9.png,"Burger do Monge","Pão, hambúrguer bovino, alface romana, azeite sagrado",22.00
+10,img/lanche10.png,"Burger da Feiticeira","Pão roxo, hambúrguer bovino, molho de ervas místicas",24.50
+11,img/lanche11.png,"Burger do Arqueiro","Pão rústico, hambúrguer de frango grelhado, folhas frescas da floresta, queijo de cabra",27.90
+12,img/lanche12.png,"Burger do Necromante","Pão escuro, hambúrguer duplo, cebola roxa em conserva, molho escuro de alho",26.40
