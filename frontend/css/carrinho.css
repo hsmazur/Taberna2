@@ -294,6 +294,76 @@ main {
 #final a:hover {
     text-decoration: underline;
 }
+/* Opções de Entrega/Retirada */
+.opcoes-entrega {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background-color: #fff9e6;
+    border: 1px solid #d4a76a;
+    border-radius: 8px;
+    display: flex;
+    gap: 1.5rem;
+}
+
+.opcoes-entrega label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    transition: all 0.3s;
+}
+
+.opcoes-entrega label:hover {
+    background-color: #f0e6cc;
+}
+
+.opcoes-entrega input[type="radio"] {
+    accent-color: #3a3226;
+}
+/* Formulário de Entrega */
+#formulario-entrega {
+    background-color: #fff9e6;
+    padding: 1.5rem;
+    border: 1px solid #d4a76a;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+#formulario-entrega.hidden {
+    display: none;
+}
+
+#formulario-entrega h3 {
+    margin-top: 0;
+    color: #1a120b;
+    border-bottom: 1px solid #d4a76a;
+    padding-bottom: 0.5rem;
+}
+
+#formulario-entrega input {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    border: 1px solid #d4a76a;
+    border-radius: 4px;
+    background-color: #fff;
+    font-family: 'MedievalSharp', cursive;
+}
+
+/* Botão Confirmar */
+#btn-confirmar {
+    background-color: #1a120b;
+    color: #d4a76a;
+    border: 2px solid #d4a76a;
+    cursor: pointer;
+}
+
+#btn-confirmar:hover {
+    background-color: #d4a76a;
+    color: #1a120b;
+}
 
 /* Responsividade */
 @media (max-width: 768px) {

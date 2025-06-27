@@ -11,61 +11,57 @@
 </head>
 <body>
     <header id="header"> 
-        <img id="logo" src="img/logo.png" alt="">
+        <img id="logo" src="img/logo.png" alt="Taberna do Dragão">
         <div>
             <h1>Taberna do Dragão</h1>
             <h2>Alimentando o reino desde 2025!</h2>
         </div>
-        <nav>
-            <a href="#sobre">Sobre</a>
-            <a href="#contato">Contato</a>
-            <a href="#siga">Siga-nos!</a>
-        </nav>
     </header>
     <header id="header2">
         <h3>Rua Zézinho da Silva, 123 - Centro</h3>
     </header>
 
     <main>
-        <div id="legenda">Carrinho</div>
-        <div id="lista-carrinho" class="container-itens"></div>
-        <div id="total-carrinho" class="container-total"></div>
-
-        <div id="opcoes-entrega">
-            <button class="btn-entrega">Entrega</button>
-            <button class="btn-retirada">Retirada</button>
+        <div id="legenda">Seu Carrinho</div>
+        
+        <!-- Opções de Entrega/Retirada -->
+        <div class="opcoes-entrega">
+            <label>
+                <input type="radio" name="tipo-entrega" value="retirada" checked>
+                <span>Retirada no Local</span>
+            </label>
+            <label>
+                <input type="radio" name="tipo-entrega" value="entrega">
+                <span>Entrega (+R$ 5,00)</span>
+            </label>
         </div>
-        
-        <div id="formulario-entrega" style="display: none;"></div>
-        
-        <div id="resumo-pedido" style="display: none;">
-            <div id="dados-usuario">
-                <h3>Dados do Usuário</h3>
-                <p id="nome-usuario"></p>
-                <p id="telefone-usuario"></p>
-                <p id="endereco-usuario"></p>
-                <p id="bairro-usuario"></p>
-            </div>
-            <div id="detalhes-pedido">
-                <h3>Detalhes do Pedido</h3>
-                <div id="itens-pedido"></div>
-                <p id="modo-entrega"></p>
-                <p id="taxa-entrega"></p>
-                <p id="preco-total"></p>
-            </div>
+
+        <!-- Formulário de Entrega (aparece apenas quando selecionado) -->
+        <div id="formulario-entrega" class="hidden">
+            <h3>Informações para Entrega</h3>
+            <input type="text" id="nome" placeholder="Seu Nome" required>
+            <input type="tel" id="telefone" placeholder="Telefone" required>
+            <input type="text" id="endereco" placeholder="Endereço" required>
+            <input type="text" id="bairro" placeholder="Bairro" required>
+        </div>
+
+        <!-- Lista de Itens -->
+        <div id="lista-carrinho"></div>
+
+        <!-- Resumo do Pedido -->
+        <div id="total-carrinho"></div>
+
+        <!-- Botões de Ação -->
+        <div id="botoes-finalizacao">
+            <a href="index.html" class="botao_altera">Voltar ao Cardápio</a>
+            <button id="btn-confirmar" class="botao_altera">Confirmar Pedido</button>
         </div>
     </main>
 
-    <div id="botoes-finalizacao">
-        <a href="index.html" class="botao_altera">Voltar ao Cardápio</a>
-        <a href="pagamento.html" class="botao_altera">Ir para o Pagamento</a>
-    </div>
-
-    <section id="final">
-        <h3 id="sobre">Sobre: Bem-vindo à Taberna do Dragão...</h3>
-        <h3 id="contato">Contato: (44) 912345-6789</h3>
-        <h3 id="siga">Siga-nos! <a href="https://www.instagram.com/hugo.mazur/">@tabernadragao</a></h3>
-    </section>
+    <footer id="final">
+        <h3>Taberna do Dragão &copy; 2025</h3>
+        <h3>Contato: (44) 91234-5678</h3>
+    </footer>
 
     <script src="./js/carrinho.js"></script>
 </body>
