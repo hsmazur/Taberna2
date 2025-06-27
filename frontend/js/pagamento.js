@@ -9,145 +9,261 @@ document.addEventListener('DOMContentLoaded', () => {
     valorTotalElement = document.getElementById('valor-total');
     areaFormularios = document.getElementById('area-formularios');
     
-    if (!valorTotalElement || !areaFormularios) {
-        showCriticalError();
-        return;
-    }
-
-    configurarPagamento();
+    // Carrega o valor total do carrinho
+    carregarTotalCarrinho();
+    
+    // Configura os listeners dos radios
+    document.querySelectorAll('input[name="pagamento"]').forEach(radio => {
+        radio.addEventListener('change', (e) => mostrarFormularioPagamento(e.target.value));
+    });
+    
+    // Mostra o formulário inicial (dinheiro por padrão)
+    mostrarFormularioPagamento('dinheiro');
 });
 
-// Função principal
-async function configurarPagamento() {
+// Carrega o total do carrinho
+async function carregarTotalCarrinho() {
     try {
-        const total = await calcularTotalCarrinho();
+        const response = await fetch(`${API_URL}/carrinho`);
+        const itens = await response.json();
+        
+        const responseProdutos = await fetch(`${API_URL}/produtos`);
+        const produtos = await responseProdutos.json();
+        
+        let total = 0;
+        itens.forEach(item => {
+            const produto = produtos.find(p => p.id == item.produtoId);
+            if (produto) {
+                total += produto.preco * item.quantidade;
+            }
+        });
+        
         valorTotalElement.textContent = `Total: R$ ${total.toFixed(2)}`;
         
-        const opcoesPagamento = document.querySelectorAll('input[name="pagamento"]');
-        opcoesPagamento.forEach(opcao => {
-            opcao.onchange = () => mostrarFormularioPagamento(opcao.value);
-        });
-
-        const opcaoSelecionada = document.querySelector('input[name="pagamento"]:checked');
-        if (opcaoSelecionada) mostrarFormularioPagamento(opcaoSelecionada.value);
-
     } catch (error) {
-        showError(error);
+        console.error('Erro ao carregar carrinho:', error);
+        valorTotalElement.textContent = 'Erro ao carregar valor total';
     }
 }
 
-// Calcula o total do carrinho
-async function calcularTotalCarrinho() {
-    try {
-        const [produtos, itens] = await Promise.all([
-            fetch(`${API_URL}/produtos`).then(res => res.json()),
-            fetch(`${API_URL}/carrinho`).then(res => res.json())
-        ]);
-
-        return itens.reduce((total, item) => {
-            const produto = produtos.find(p => p.id == item.produtoId);
-            return total + (produto ? produto.preco * item.quantidade : 0);
-        }, 0);
-    } catch (error) {
-        console.error("Erro ao calcular total:", error);
-        throw new Error("Não foi possível carregar o carrinho");
-    }
-}
-
-// Mostra o formulário de pagamento
-function mostrarFormularioPagamento(tipoPagamento) {
-    const total = valorTotalElement.textContent.replace('Total: R$ ', '');
+// Mostra o formulário correspondente ao tipo de pagamento
+function mostrarFormularioPagamento(tipo) {
     const templates = {
         dinheiro: `
-            <div class="formulario">
-                <p>Valor a pagar: <span>R$ ${total}</span></p>
-                <label><input type="radio" name="troco" value="sim"> Precisa de troco?</label>
-                <input type="number" id="valor-troco" placeholder="Troco para quanto?" class="hidden">
-                ${criarBotoesFormulario()}
+            <div class="formulario-pagamento">
+                <h3>Pagamento em Dinheiro</h3>
+                <p>Você selecionou pagamento em dinheiro.</p>
+                <p>Prepare o troco necessário.</p>
+                <div class="grupo-troco">
+                    <label>
+                        <input type="checkbox" id="precisa-troco"> 
+                        <span>Preciso de troco para:</span>
+                    </label>
+                    <input type="number" id="valor-troco" placeholder="R$ 0,00" min="0" step="0.01" disabled>
+                </div>
+                <button id="confirmar-pagamento" class="botao-confirmar">Confirmar Pedido</button>
             </div>
         `,
         pix: `
-            <div class="formulario">
-                <p>Valor a pagar: <span>R$ ${total}</span></p>
-                <p>Chave Pix: <strong>taverna@gmail.com</strong></p>
-                <button id="gerar-qrcode">Gerar QR Code</button>
-                <img id="qr-code" src="img/qrcode.png" alt="QR Code" class="hidden">
-                ${criarBotoesFormulario()}
+            <div class="formulario-pagamento">
+                <h3>Pagamento via PIX</h3>
+                <p>Chave PIX: <strong>taberna@dragao.com</strong></p>
+                <div class="qr-code-container">
+                    <button id="gerar-qrcode">Mostrar QR Code</button>
+                    <img id="qr-code-image" src="img/qrcode.png" alt="QR Code PIX" style="display: none; max-width: 200px; margin: 1rem auto;">
+                </div>
+                <p>Após o pagamento, clique em confirmar.</p>
+                <button id="confirmar-pagamento" class="botao-confirmar">Confirmar Pedido</button>
             </div>
         `,
         debito: `
-            <div class="formulario">
-                <p>Valor a pagar: <span>R$ ${total}</span></p>
-                <input type="text" id="numero-cartao" placeholder="Número do cartão" data-mask="card">
-                <input type="text" id="validade-cartao" placeholder="MM/AA" data-mask="date">
-                <input type="text" id="cvc-cartao" placeholder="CVC" data-mask="cvc">
-                ${criarBotoesFormulario()}
+            <div class="formulario-pagamento">
+                <h3>Pagamento com Cartão de Débito</h3>
+                <div class="grupo-cartao">
+                    <input type="text" id="numero-cartao" placeholder="Número do Cartão" maxlength="19">
+                    <span id="erro-numero" class="mensagem-erro"></span>
+                    
+                    <div class="linha-cartao">
+                        <input type="text" id="validade-cartao" placeholder="MM/AA" maxlength="5">
+                        <input type="text" id="cvv-cartao" placeholder="CVV" maxlength="3">
+                    </div>
+                    <span id="erro-validade" class="mensagem-erro"></span>
+                    <span id="erro-cvv" class="mensagem-erro"></span>
+                    
+                    <input type="text" id="nome-cartao" placeholder="Nome no Cartão">
+                    <span id="erro-nome" class="mensagem-erro"></span>
+                </div>
+                <button id="confirmar-pagamento" class="botao-confirmar">Confirmar Pedido</button>
             </div>
         `
     };
 
-    areaFormularios.innerHTML = templates[tipoPagamento];
-    configurarEventosFormulario(tipoPagamento);
+    areaFormularios.innerHTML = templates[tipo];
+    configurarEventosFormulario(tipo);
 }
 
-// Funções auxiliares
-function criarBotoesFormulario() {
-    return `
-        <div class="botoes-final">
-            <a href="carrinho.html" class="botao-voltar">Voltar</a>
-            <button class="botao-confirmar">Confirmar Pedido</button>
-        </div>
-    `;
-}
-
-function configurarEventosFormulario(tipoPagamento) {
-    // Configura máscaras e eventos específicos
-    if (tipoPagamento === 'dinheiro') {
-        document.querySelector('input[name="troco"][value="sim"]').onchange = () => {
-            document.getElementById('valor-troco').classList.toggle('hidden');
-        };
-    } else if (tipoPagamento === 'pix') {
-        document.getElementById('gerar-qrcode').onclick = () => {
-            document.getElementById('qr-code').classList.toggle('hidden');
-        };
+// Configura os eventos específicos de cada formulário
+function configurarEventosFormulario(tipo) {
+    switch (tipo) {
+        case 'dinheiro':
+            document.getElementById('precisa-troco').addEventListener('change', (e) => {
+                document.getElementById('valor-troco').disabled = !e.target.checked;
+            });
+            break;
+            
+        case 'pix':
+            document.getElementById('gerar-qrcode').addEventListener('click', () => {
+                const qrCode = document.getElementById('qr-code-image');
+                qrCode.style.display = qrCode.style.display === 'none' ? 'block' : 'none';
+            });
+            break;
+            
+        case 'debito':
+            // Máscara para número do cartão (formato: 0000 0000 0000 0000)
+            document.getElementById('numero-cartao').addEventListener('input', (e) => {
+                let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/g, '');
+                if (value.length > 0) {
+                    value = value.match(new RegExp('.{1,4}', 'g')).join(' ');
+                }
+                e.target.value = value;
+                
+                // Validação básica (16 dígitos)
+                const numeros = value.replace(/\s/g, '');
+                const erro = document.getElementById('erro-numero');
+                if (numeros.length !== 16) {
+                    erro.textContent = 'Número do cartão inválido (16 dígitos)';
+                    erro.style.display = 'block';
+                } else {
+                    erro.style.display = 'none';
+                }
+            });
+            
+            // Máscara para validade (MM/AA)
+            document.getElementById('validade-cartao').addEventListener('input', (e) => {
+                let value = e.target.value.replace(/[^0-9]/g, '');
+                if (value.length >= 2) {
+                    value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                }
+                e.target.value = value;
+                
+                // Validação básica
+                const erro = document.getElementById('erro-validade');
+                if (value.length !== 5 || !validarDataCartao(value)) {
+                    erro.textContent = 'Data inválida (MM/AA)';
+                    erro.style.display = 'block';
+                } else {
+                    erro.style.display = 'none';
+                }
+            });
+            
+            // Máscara para CVV (3 dígitos)
+            document.getElementById('cvv-cartao').addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '').substring(0, 3);
+                
+                // Validação básica
+                const erro = document.getElementById('erro-cvv');
+                if (e.target.value.length !== 3) {
+                    erro.textContent = 'CVV inválido (3 dígitos)';
+                    erro.style.display = 'block';
+                } else {
+                    erro.style.display = 'none';
+                }
+            });
+            
+            // Validação do nome no cartão
+            document.getElementById('nome-cartao').addEventListener('input', (e) => {
+                const erro = document.getElementById('erro-nome');
+                if (e.target.value.trim().length < 3) {
+                    erro.textContent = 'Nome muito curto';
+                    erro.style.display = 'block';
+                } else {
+                    erro.style.display = 'none';
+                }
+            });
+            break;
     }
-
-    // Evento do botão Confirmar
-    document.querySelector('.botao-confirmar').onclick = async () => {
-        if (validarFormulario(tipoPagamento)) {
-            await finalizarPedido(tipoPagamento);
+    
+    // Configura o botão de confirmar pedido
+    document.getElementById('confirmar-pagamento').addEventListener('click', () => {
+        if (validarFormulario(tipo)) {
+            finalizarPedido(tipo);
         }
-    };
+    });
 }
 
-async function finalizarPedido(metodoPagamento) {
-    try {
-        const total = await calcularTotalCarrinho();
-        const response = await fetch(`${API_URL}/pedidos`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ metodoPagamento, total })
-        });
-
-        if (!response.ok) throw new Error("Erro ao finalizar pedido");
-        
-        alert('Pedido confirmado! Obrigado!');
-        window.location.href = 'index.html';
-    } catch (error) {
-        alert(`Erro: ${error.message}`);
+// Valida o formulário antes de enviar
+function validarFormulario(tipo) {
+    switch (tipo) {
+        case 'debito':
+            const numero = document.getElementById('numero-cartao').value.replace(/\s/g, '');
+            const validade = document.getElementById('validade-cartao').value;
+            const cvv = document.getElementById('cvv-cartao').value;
+            const nome = document.getElementById('nome-cartao').value.trim();
+            
+            if (numero.length !== 16) {
+                alert('Número do cartão inválido!');
+                return false;
+            }
+            
+            if (!validarDataCartao(validade)) {
+                alert('Data de validade inválida!');
+                return false;
+            }
+            
+            if (cvv.length !== 3) {
+                alert('CVV inválido!');
+                return false;
+            }
+            
+            if (nome.length < 3) {
+                alert('Nome no cartão inválido!');
+                return false;
+            }
+            break;
+            
+        case 'dinheiro':
+            const precisaTroco = document.getElementById('precisa-troco').checked;
+            const valorTroco = parseFloat(document.getElementById('valor-troco').value);
+            
+            if (precisaTroco && (isNaN(valorTroco) || valorTroco <= 0)) {
+                alert('Informe um valor válido para o troco!');
+                return false;
+            }
+            break;
     }
+    
+    return true;
 }
 
-// Tratamento de erros
-function showCriticalError() {
-    document.body.innerHTML = `
-        <div class="error">
-            <h2>Erro crítico</h2>
-            <p>Recarregue a página ou volte mais tarde.</p>
-        </div>
-    `;
+// Valida a data do cartão (MM/AA)
+function validarDataCartao(data) {
+    if (data.length !== 5) return false;
+    
+    const [mes, ano] = data.split('/').map(Number);
+    const agora = new Date();
+    const anoAtual = agora.getFullYear() % 100;
+    const mesAtual = agora.getMonth() + 1;
+    
+    // Verifica se o mês é válido (1-12)
+    if (mes < 1 || mes > 12) return false;
+    
+    // Verifica se a data não está no passado
+    if (ano < anoAtual || (ano === anoAtual && mes < mesAtual)) return false;
+    
+    return true;
 }
 
-function showError(error) {
-    valorTotalElement.innerHTML = `<span class="error">Erro: ${error.message}</span>`;
+// Finaliza o pedido
+async function finalizarPedido(metodo) {
+    try {
+        // Simula o processamento do pagamento
+        alert(`Pagamento com ${metodo} realizado com sucesso!`);
+        
+        // Redireciona para página de confirmação
+        window.location.href = 'confirmacao.html';
+        
+    } catch (error) {
+        console.error('Erro ao finalizar pedido:', error);
+        alert('Erro ao processar pagamento. Tente novamente.');
+    }
 }

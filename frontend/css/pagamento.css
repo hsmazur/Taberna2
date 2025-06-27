@@ -1,255 +1,260 @@
-.medievalsharp-regular {
-    font-family: "MedievalSharp", cursive;
-    font-weight: 400;
-    font-style: normal;
-}
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/* Estilos Gerais - Temática Medieval */
 body {
-    font-family: "MedievalSharp";
-    background-color: #f9f4ea;
+    font-family: 'MedievalSharp', cursive;
+    background-color: #f5ecd7;
+    background-attachment: fixed;
+    color: #3a3226;
     margin: 0;
     padding: 0;
-    background-image: url("https://wallpapers.com/images/hd/old-paper-texture-parchment-grodfr8ezxzzei6l.jpg")
+    line-height: 1.6;
 }
 
-
+/* Cabeçalho (consistente com outros arquivos) */
 #header {
-    background-color: blueviolet;
-    font-size: larger;
-    padding: 0px 20px;
+    background-color: #1a120b;
+    color: #d4a76a;
+    padding: 1rem;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-    width: 100%;
-    font-family: "MedievalSharp";
- 
+    border-bottom: 3px solid #d4a76a;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 #logo {
-    width: 150px;
-    height: 120px;
+    height: 80px;
+    margin-right: 20px;
 }
 
-nav {
-    display: flex;
+#header h1 {
+    margin: 0;
+    font-size: 2.2rem;
+    text-shadow: 2px 2px 4px #000;
 }
 
-nav a {
-    font-size: 23px;
-    color: white;
-    margin-left: 20px;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-nav a:hover {
-    color: black
+#header h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: normal;
+    color: #d4a76a;
 }
 
 #header2 {
-    background-color: brown;
+    background-color: #3a3226;
+    color: #d4a76a;
+    padding: 0.5rem;
     text-align: center;
-    padding: 5px 0; 
-    color: white;
-    width: 100%; 
+    font-size: 0.9rem;
 }
 
-
+/* Container Principal */
 .container {
-    max-width: 600px;
-    margin: 50px auto;
-    padding: 30px;
-    background-color: #fff8e1;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    border-radius: 10px;
-    text-align: center;
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: rgba(255, 253, 245, 0.9);
+    border: 2px solid #3a3226;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(58, 50, 38, 0.4);
 }
 
-#valor-total {
-    font-size: 2em;
-    font-weight: bold;
-    margin-top: 20px;
-    color: green;
+.container h1 {
+    font-size: 2rem;
     text-align: center;
-    background-color: #f9f4ea;
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    color: #1a120b;
+    border-bottom: 2px solid #d4a76a;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
 }
 
+/* Valor Total */
 .valor-total {
-    color: green;
-    font-size: 2em;
+    font-size: 1.8rem;
+    text-align: center;
+    margin: 1rem 0;
+    padding: 1rem;
+    background-color: #fff9e6;
+    border: 1px solid #d4a76a;
+    border-radius: 8px;
+    color: #8b0000;
     font-weight: bold;
-    margin-top: 20px;
-    text-align: center;
 }
 
-
-#botao_volta {
-    display: flex;
-    justify-content: center;
-    margin: 20px 20px 0 20px;
-}
-
+/* Botão Voltar */
 .botao_carrinho {
-    background-color: green;
-    color: white;
-    padding: 15px 30px;
-    font-size: 20px;
-    border: none;
-    border-radius: 15px;
+    display: inline-block;
+    background-color: #3a3226;
+    color: #d4a76a;
+    padding: 0.8rem 1.5rem;
     text-decoration: none;
-    width: 100%;
-    max-width: 600px;
-    text-align: center;
-    transition: background-color 0.3s ease;
+    border-radius: 30px;
+    transition: all 0.3s;
+    border: 2px solid #d4a76a;
+    font-size: 1.1rem;
+    margin: 1rem 0;
 }
 
-.botao_altera:hover {
-    background-color: darkgreen;
+.botao_carrinho:hover {
+    background-color: #d4a76a;
+    color: #1a120b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
+/* Opções de Pagamento */
 #opcoes-pagamento {
-    margin-top: 30px;
-    text-align: left;
+    margin: 2rem 0;
+}
+
+#opcoes-pagamento h2 {
+    font-size: 1.5rem;
+    color: #1a120b;
+    margin-bottom: 1rem;
 }
 
 .opcao {
     display: block;
-    margin: 10px 0;
-    font-size: 1.1em;
-}
-
-#formularios-pagamento {
-    margin-top: 30px;
-    padding: 20px;
-    background-color: #fff8e1;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.formulario {
-    margin-bottom: 20px;
-    padding: 20px;
-    background-color: #f9f4ea;
-    border-radius: 10px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    text-align: left;
-}
-
-.formulario p {
-    font-size: 1.1em;
-    margin-bottom: 10px;
-}
-
-.formulario input[type="text"], 
-.formulario input[type="number"] {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1em;
-}
-
-.formulario input[type="radio"] {
-    margin-right: 10px;
-}
-
-.formulario label {
-    font-size: 1em;
-    margin-right: 15px;
-}
-
-.formulario .botoes-final {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
-.formulario .botao_carrinho, 
-.formulario .botao_confirmar {
-    width: 48%;
-    padding: 10px;
-    font-size: 1.1em;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.formulario .botao_carrinho {
-    background-color: green;
-    color: white;
-    text-align: center;
-}
-
-.formulario .botao_carrinho:hover {
-    background-color: darkgreen;
-}
-
-.formulario .botao_confirmar {
-    background-color: blueviolet;
-    color: white;
-    text-align: center;
-}
-
-.formulario .botao_confirmar:hover {
-    background-color: darkviolet;
-}
-
-.formulario input[type="number"] {
-    display: none;
-}
-
-#qr-code {
-    display: block;
-    margin-top: 10px;
-    max-width: 200px;
-}
-
-#form-dinheiro input[type="number"] {
-    display: none;
-}
-button.botao_qr {
-    background-color: #6e4b3b;
-    color: #fff;
-    padding: 12px 25px;
-    border: none;
+    margin: 1rem 0;
+    padding: 1rem;
+    background-color: #fff9e6;
+    border: 1px solid #d4a76a;
     border-radius: 8px;
-    font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-    font-family: 'Arial', sans-serif;
+    transition: all 0.3s;
 }
 
-button.botao_qr:hover {
-    background-color: #9f7c6f;
-    transform: scale(1.05);
+.opcao:hover {
+    background-color: #f0e6cc;
 }
 
-button.botao_qr:active {
-    background-color: #4b372b;
-    transform: scale(0.98);
+.opcao input {
+    margin-right: 10px;
+    accent-color: #3a3226;
 }
 
+/* Formulários de Pagamento */
+#area-formularios {
+    margin-top: 2rem;
+}
 
+.formulario-pagamento {
+    padding: 1.5rem;
+    background-color: #fff9e6;
+    border: 1px solid #d4a76a;
+    border-radius: 8px;
+}
+
+.formulario-pagamento h3 {
+    margin-top: 0;
+    color: #1a120b;
+    border-bottom: 1px solid #d4a76a;
+    padding-bottom: 0.5rem;
+}
+
+.formulario-pagamento input {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    border: 1px solid #d4a76a;
+    border-radius: 4px;
+    background-color: #fff;
+    font-family: 'MedievalSharp', cursive;
+}
+
+.formulario-pagamento input:focus {
+    outline: 2px solid #3a3226;
+}
+
+/* Estilos específicos para cada método */
+/* Dinheiro */
+.grupo-troco {
+    margin: 1rem 0;
+}
+
+/* PIX */
+.qr-code-container {
+    text-align: center;
+    margin: 1rem 0;
+}
+
+#qr-code-image {
+    border: 2px solid #3a3226;
+    border-radius: 8px;
+    padding: 0.5rem;
+    background: white;
+}
+
+/* Cartão */
+.linha-cartao {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.linha-cartao input {
+    flex: 1;
+}
+
+/* Botão Confirmar */
+.botao-confirmar {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background-color: #1a120b;
+    color: #d4a76a;
+    border: 2px solid #d4a76a;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 1rem;
+}
+
+.botao-confirmar:hover {
+    background-color: #d4a76a;
+    color: #1a120b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Mensagens de Erro */
+.mensagem-erro {
+    color: #8b0000;
+    font-size: 0.9rem;
+    margin: -0.5rem 0 1rem 0;
+    display: block;
+}
+
+/* Rodapé */
 #final {
-    background-color: blueviolet;
-    font-size: larger;
-    padding: 30px 10px;
-    color: black;
-    text-align: left;
-    margin-top: 20px;
-    font-family: "MedievalSharp";
-
+    background-color: #1a120b;
+    color: #d4a76a;
+    padding: 2rem;
+    margin-top: 3rem;
+    text-align: center;
 }
+
+#final h3 {
+    margin: 0.5rem 0;
+}
+
 #final a {
-    color: white;
+    color: #d4a76a;
+    text-decoration: none;
+}
+
+#final a:hover {
+    text-decoration: underline;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .container {
+        margin: 1rem;
+        padding: 1rem;
+    }
+    
+    .linha-cartao {
+        flex-direction: column;
+        gap: 0;
+    }
 }
