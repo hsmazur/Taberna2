@@ -2,6 +2,9 @@
 const API_URL = 'http://localhost:3000';
 const TAXA_ENTREGA = 5.00;
 
+// Estado global
+let carrinhoItens = [];
+
 // Elementos principais
 let listaCarrinho, totalCarrinho, opcoesEntrega, formularioEntrega, btnConfirmar;
 
@@ -28,7 +31,10 @@ document.addEventListener('DOMContentLoaded', () => {
     loadCart();
 });
 
-// Funções principais
+// ==============================================
+// Funções Principais
+// ==============================================
+
 async function loadCart() {
     try {
         showLoading();
@@ -37,6 +43,8 @@ async function loadCart() {
             fetch(`${API_URL}/produtos`).then(handleResponse),
             fetch(`${API_URL}/carrinho`).then(handleResponse)
         ]);
+
+        carrinhoItens = itens; // Atualiza o estado global
 
         if (itens.length === 0) {
             showEmptyCart();
@@ -67,10 +75,10 @@ function renderCart(produtos, itens) {
                     <h3>${produto.nome}</h3>
                     <p class="ingredientes">${produto.ingredientes}</p>
                     <div class="item-controls">
-                        <button onclick="updateItem(${produto.id}, -1)">−</button>
+                        <button class="btn-diminuir" data-id="${produto.id}">−</button>
                         <span class="quantidade">${item.quantidade}</span>
-                        <button onclick="updateItem(${produto.id}, 1)">+</button>
-                        <button class="btn-remover" onclick="removeItem(${produto.id})">Remover</button>
+                        <button class="btn-aumentar" data-id="${produto.id}">+</button>
+                        <button class="btn-remover" data-id="${produto.id}">Remover</button>
                     </div>
                     <p class="preco">R$ ${produto.preco.toFixed(2)}</p>
                     <p class="subtotal">Subtotal: R$ ${subtotal.toFixed(2)}</p>
@@ -80,7 +88,7 @@ function renderCart(produtos, itens) {
     });
 
     // Verifica se é entrega
-    const isEntrega = document.querySelector('input[name="tipo-entrega"]:checked').value === 'entrega';
+    const isEntrega = document.querySelector('input[name="tipo-entrega"]:checked')?.value === 'entrega';
     if (isEntrega) total += TAXA_ENTREGA;
 
     listaCarrinho.innerHTML = html;
@@ -90,9 +98,84 @@ function renderCart(produtos, itens) {
             <p>Total: <strong>R$ ${total.toFixed(2)}</strong></p>
         </div>
     `;
+
+    // Adiciona os event listeners após renderizar
+    addItemEventListeners();
 }
 
-// Handlers
+// ==============================================
+// Manipulação do Carrinho
+// ==============================================
+
+function addItemEventListeners() {
+    document.querySelectorAll('.btn-aumentar').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const id = e.target.getAttribute('data-id');
+            updateItemQuantity(id, 1);
+        });
+    });
+
+    document.querySelectorAll('.btn-diminuir').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const id = e.target.getAttribute('data-id');
+            updateItemQuantity(id, -1);
+        });
+    });
+
+    document.querySelectorAll('.btn-remover').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const id = e.target.getAttribute('data-id');
+            removeItemCompletely(id);
+        });
+    });
+}
+
+async function updateItemQuantity(id, change) {
+    try {
+        const item = carrinhoItens.find(item => item.produtoId == id);
+        if (!item) return;
+
+        const novaQuantidade = parseInt(item.quantidade) + change;
+        
+        if (novaQuantidade <= 0) {
+            await removeItemCompletely(id);
+            return;
+        }
+
+        await fetch(`${API_URL}/carrinho`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ produtoId: id, quantidade: novaQuantidade })
+        });
+
+        loadCart(); // Recarrega o carrinho
+
+    } catch (error) {
+        console.error('Erro ao atualizar item:', error);
+        alert('Erro ao atualizar quantidade');
+    }
+}
+
+async function removeItemCompletely(id) {
+    if (confirm('Remover este item do carrinho?')) {
+        try {
+            await fetch(`${API_URL}/carrinho`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ produtoId: id, quantidade: 0 })
+            });
+            loadCart();
+        } catch (error) {
+            console.error('Erro ao remover item:', error);
+            alert('Erro ao remover item');
+        }
+    }
+}
+
+// ==============================================
+// Entrega/Retirada
+// ==============================================
+
 function handleTipoEntregaChange(e) {
     const isEntrega = e.target.value === 'entrega';
     formularioEntrega.classList.toggle('hidden', !isEntrega);
@@ -100,7 +183,7 @@ function handleTipoEntregaChange(e) {
 }
 
 async function handleConfirmarPedido() {
-    const isEntrega = document.querySelector('input[name="tipo-entrega"]:checked').value === 'entrega';
+    const isEntrega = document.querySelector('input[name="tipo-entrega"]:checked')?.value === 'entrega';
     
     if (isEntrega) {
         const nome = document.getElementById('nome').value;
@@ -118,32 +201,10 @@ async function handleConfirmarPedido() {
     window.location.href = 'pagamento.html';
 }
 
-// Funções do carrinho (mantidas do código original)
-window.updateItem = async (id, change) => {
-    try {
-        const quantidadeElement = document.querySelector(`.item-carrinho[data-id="${id}"] .quantidade`);
-        const novaQuantidade = parseInt(quantidadeElement.textContent) + change;
+// ==============================================
+// Funções Auxiliares
+// ==============================================
 
-        if (novaQuantidade > 0) {
-            await fetch(`${API_URL}/carrinho`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ produtoId: id, quantidade: novaQuantidade })
-            });
-            loadCart();
-        }
-    } catch (error) {
-        alert('Erro ao atualizar: ' + error.message);
-    }
-};
-
-window.removeItem = async (id) => {
-    if (confirm('Remover este item do carrinho?')) {
-        await updateItem(id, -999);
-    }
-};
-
-// Funções auxiliares (mantidas do código original)
 function handleResponse(response) {
     if (!response.ok) throw new Error(`Erro ${response.status}`);
     return response.json();
@@ -151,6 +212,7 @@ function handleResponse(response) {
 
 function showLoading() {
     listaCarrinho.innerHTML = '<div class="loading"><p>Carregando seu carrinho...</p></div>';
+    totalCarrinho.innerHTML = '';
 }
 
 function showEmptyCart() {
@@ -165,6 +227,7 @@ function showEmptyCart() {
 }
 
 function showError(error) {
+    console.error('Erro:', error);
     listaCarrinho.innerHTML = `
         <div class="error">
             <p>😕 Não foi possível carregar seu carrinho</p>
@@ -172,6 +235,7 @@ function showError(error) {
             <button onclick="location.reload()">Tentar novamente</button>
         </div>
     `;
+    totalCarrinho.innerHTML = '';
 }
 
 function showCriticalError() {
