@@ -14,7 +14,7 @@ const CSV_DIR = path.join(__dirname, 'csv');
 const CSV_PRODUTOS = path.join(CSV_DIR, 'produtos.csv');
 const CSV_CARRINHO = path.join(CSV_DIR, 'carrinho.csv');
 const CSV_PEDIDOS = path.join(CSV_DIR, 'pedidos.csv');
-const CSV_USUARIOS = path.join(CSV_DIR, 'usuarios.csv'); // Novo arquivo para usuários
+const CSV_USUARIOS = path.join(CSV_DIR, 'usuarios.csv');
 
 // Garante que a pasta csv existe
 function criarPastaCSV() {
@@ -40,13 +40,13 @@ function inicializarCSVs() {
   }
   
   if (!fs.existsSync(CSV_USUARIOS)) {
-    fs.writeFileSync(CSV_USUARIOS, 'id,nome,email,senha,dataCadastro\n');
+    fs.writeFileSync(CSV_USUARIOS, 'id,nome,email,senha,tipo\n');
   }
 }
 
 inicializarCSVs();
 
-// Rotas de Produtos (com tratamento melhorado)
+// Rotas de Produtos
 app.get('/produtos', (req, res) => {
   if (!fs.existsSync(CSV_PRODUTOS)) {
     return res.status(404).json({ error: "Arquivo de produtos não encontrado" });
@@ -79,7 +79,7 @@ app.get('/produtos', (req, res) => {
     });
 });
 
-// Rotas do Carrinho (com validação)
+// Rotas do Carrinho
 app.post('/carrinho', async (req, res) => {
   const { produtoId, quantidade } = req.body;
   
@@ -127,7 +127,7 @@ app.get('/carrinho', async (req, res) => {
   }
 });
 
-// Rotas de Pedidos (com mais detalhes)
+// Rotas de Pedidos
 app.post('/pedidos', async (req, res) => {
   const { usuarioId, metodoPagamento, total, itens } = req.body;
   
@@ -143,13 +143,11 @@ app.post('/pedidos', async (req, res) => {
       metodoPagamento,
       total: parseFloat(total).toFixed(2),
       data: new Date().toISOString(),
-      itens: JSON.stringify(itens) // Salva itens como string JSON
+      itens: JSON.stringify(itens)
     };
     
     pedidos.push(novoPedido);
     await escreverCSV(CSV_PEDIDOS, pedidos);
-    
-    // Limpa o carrinho após finalizar pedido
     await escreverCSV(CSV_CARRINHO, []);
     
     res.json({ success: true, pedido: novoPedido });
@@ -159,70 +157,107 @@ app.post('/pedidos', async (req, res) => {
   }
 });
 
-// Rotas de Usuários (para login/cadastro)
-app.post('/usuarios/cadastro', async (req, res) => {
-  const { nome, email, senha } = req.body;
-  
-  if (!nome || !email || !senha) {
-    return res.status(400).json({ error: 'Dados incompletos' });
-  }
+// Rota de Cadastro
+app.post('/cadastrar', async (req, res) => {
+    const { nome, email, senha } = req.body;
 
-  try {
-    const usuarios = fs.existsSync(CSV_USUARIOS) ? await lerCSV(CSV_USUARIOS) : [];
-    
-    // Verifica se email já existe
-    if (usuarios.some(u => u.email === email)) {
-      return res.status(409).json({ error: 'Email já cadastrado' });
+    if (!nome || !email || !senha) {
+        return res.status(400).json({ 
+            success: false,
+            message: 'Todos os campos são obrigatórios'
+        });
     }
 
-    const novoUsuario = {
-      id: usuarios.length + 1,
-      nome,
-      email,
-      senha, // Na prática, armazene hash da senha!
-      dataCadastro: new Date().toISOString()
-    };
-    
-    usuarios.push(novoUsuario);
-    await escreverCSV(CSV_USUARIOS, usuarios);
-    
-    res.json({ success: true, usuario: { id: novoUsuario.id, nome: novoUsuario.nome } });
-  } catch (error) {
-    console.error('Erro ao cadastrar usuário:', error);
-    res.status(500).json({ error: 'Erro no servidor' });
-  }
-});
+    try {
+        const usuarios = await lerCSV(CSV_USUARIOS);
+        
+        const emailExistente = usuarios.some(u => u.email === email);
+        if (emailExistente) {
+            return res.status(409).json({ 
+                success: false,
+                message: 'Este email já está cadastrado'
+            });
+        }
 
-app.post('/usuarios/login', async (req, res) => {
-  const { email, senha } = req.body;
-  
-  if (!email || !senha) {
-    return res.status(400).json({ error: 'Dados incompletos' });
-  }
+        const novoUsuario = {
+            id: usuarios.length + 1,
+            nome,
+            email,
+            senha,
+            tipo: 'cliente'
+        };
 
-  try {
-    const usuarios = fs.existsSync(CSV_USUARIOS) ? await lerCSV(CSV_USUARIOS) : [];
-    const usuario = usuarios.find(u => u.email === email && u.senha === senha);
-    
-    if (!usuario) {
-      return res.status(401).json({ error: 'Credenciais inválidas' });
+        usuarios.push(novoUsuario);
+        await escreverCSV(CSV_USUARIOS, usuarios);
+
+        res.json({ 
+            success: true,
+            message: 'Cadastro realizado com sucesso!',
+            usuario: {
+                id: novoUsuario.id,
+                nome: novoUsuario.nome,
+                tipo: novoUsuario.tipo
+            }
+        });
+
+    } catch (error) {
+        console.error('Erro no cadastro:', error);
+        res.status(500).json({ 
+            success: false,
+            message: 'Erro interno no servidor'
+        });
     }
-    
-    res.json({ 
-      success: true, 
-      usuario: { 
-        id: usuario.id, 
-        nome: usuario.nome,
-        email: usuario.email
-      } 
-    });
-  } catch (error) {
-    console.error('Erro ao fazer login:', error);
-    res.status(500).json({ error: 'Erro no servidor' });
-  }
 });
 
-// Funções auxiliares melhoradas
+// Nova Rota de Login
+app.post('/login', async (req, res) => {
+    const { email, senha } = req.body;
+
+    if (!email || !senha) {
+        return res.status(400).json({ 
+            success: false,
+            message: 'Email e senha são obrigatórios'
+        });
+    }
+
+    try {
+        const usuarios = await lerCSV(CSV_USUARIOS);
+        const usuario = usuarios.find(u => u.email === email);
+        
+        if (!usuario) {
+            return res.status(404).json({ 
+                success: false,
+                message: 'Email não cadastrado'
+            });
+        }
+
+        if (usuario.senha !== senha) {
+            return res.status(401).json({ 
+                success: false,
+                message: 'Senha incorreta'
+            });
+        }
+        
+        res.json({ 
+            success: true,
+            message: 'Login realizado com sucesso!',
+            usuario: {
+                id: usuario.id,
+                nome: usuario.nome,
+                email: usuario.email,
+                tipo: usuario.tipo
+            }
+        });
+    } catch (error) {
+        console.error('Erro no login:', error);
+        res.status(500).json({ 
+            success: false,
+            message: 'Erro interno no servidor'
+        });
+    }
+});
+
+// Funções auxiliares
 async function lerCSV(arquivo) {
   return new Promise((resolve, reject) => {
     const dados = [];
