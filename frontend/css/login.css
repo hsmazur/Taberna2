@@ -1,6 +1,6 @@
 /* Container Principal */
 .container {
-    max-width: 600px;
+    max-width: 500px;
     margin: 2rem auto;
     padding: 2rem;
     background-color: rgba(255, 253, 245, 0.9);
@@ -19,7 +19,7 @@
 }
 
 /* Formulário */
-#form-cadastro {
+#form-login {
     margin-top: 2rem;
 }
 
@@ -48,60 +48,7 @@
     outline: 2px solid #3a3226;
 }
 
-.grupo-input small {
-    display: block;
-    margin-top: 0.3rem;
-    font-size: 0.8rem;
-    color: #5c4d3d;
-}
-
-/* Botão */
-.botao-cadastro {
-    display: block;
-    width: 100%;
-    padding: 1rem;
-    background-color: #1a120b;
-    color: #d4a76a;
-    border: 2px solid #d4a76a;
-    border-radius: 30px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: all 0.3s;
-    margin-top: 1.5rem;
-}
-
-.botao-cadastro:hover {
-    background-color: #d4a76a;
-    color: #1a120b;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-/* Link de Login */
-.login-link {
-    text-align: center;
-    margin-top: 1.5rem;
-    font-size: 1rem;
-}
-
-.login-link a {
-    color: #8b0000;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.login-link a:hover {
-    text-decoration: underline;
-}
-
-/* Mensagens de Erro */
-.mensagem-erro {
-    color: #8b0000;
-    font-size: 0.9rem;
-    margin-top: 0.3rem;
-    display: block;
-}
-/* Estilo para o grupo de input de senha */
+/* Grupo de Input de Senha */
 .input-senha {
     position: relative;
     display: flex;
@@ -109,7 +56,7 @@
 }
 
 .input-senha input {
-    padding-right: 40px; /* Espaço para o botão */
+    padding-right: 40px;
 }
 
 .botao-visualizar {
@@ -130,6 +77,62 @@
 
 .botao-visualizar:hover img {
     transform: scale(1.1);
+}
+
+/* Botão de Login */
+.botao-login {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background-color: #1a120b;
+    color: #d4a76a;
+    border: 2px solid #d4a76a;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 1.5rem;
+}
+
+.botao-login:hover {
+    background-color: #d4a76a;
+    color: #1a120b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Link para Cadastro */
+.cadastro-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 1rem;
+}
+
+.cadastro-link a {
+    color: #8b0000;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.cadastro-link a:hover {
+    text-decoration: underline;
+}
+
+/* Mensagens de Erro */
+.mensagem-erro {
+    color: #8b0000;
+    font-size: 0.9rem;
+    margin-top: 0.3rem;
+    display: block;
+}
+
+/* Validação */
+input:invalid {
+    border-color: #8b0000;
+}
+
+input:valid {
+    border-color: #2e8b57;
 }
 
 /* Responsividade */
