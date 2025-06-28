@@ -1,0 +1,68 @@
+/* Estilos Gerais - Temática Medieval */
+body {
+    font-family: 'MedievalSharp', cursive;
+    background-color: #f5ecd7;
+    background-attachment: fixed;
+    color: #3a3226;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+/* Cabeçalho */
+#header {
+    background-color: #1a120b;
+    color: #d4a76a;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    border-bottom: 3px solid #d4a76a;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+#logo {
+    height: 80px;
+    margin-right: 20px;
+}
+
+#header h1 {
+    margin: 0;
+    font-size: 2.2rem;
+    text-shadow: 2px 2px 4px #000;
+}
+
+#header h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: normal;
+    color: #d4a76a;
+}
+
+#header2 {
+    background-color: #3a3226;
+    color: #d4a76a;
+    padding: 0.5rem;
+    text-align: center;
+    font-size: 0.9rem;
+}
+/* Rodapé */
+#final {
+    background-color: #1a120b;
+    color: #d4a76a;
+    padding: 2rem;
+    margin-top: 3rem;
+    text-align: center;
+}
+
+#final h3 {
+    margin: 0.5rem 0;
+}
+
+#final a {
+    color: #d4a76a;
+    text-decoration: none;
+}
+
+#final a:hover {
+    text-decoration: underline;
+}
