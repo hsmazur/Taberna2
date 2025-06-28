@@ -1,2 +1,11 @@
 id,nome,email,senha,tipo
-1,"Hugo Mazur","hugomazur16@gmail.com","hugo1611?",Gerente
+1,Hugo Mazur,hugomazur16@gmail.com,hugo1611?,gerente
+2,Breno Souza,breno.souza@email.com,abc123,cliente
+3,Carla Mendes,carla.mendes@email.com,carla2024,cliente
+4,Daniel Rocha,daniel.rocha@email.com,123456,cliente
+5,Elisa Ramos,elisa.ramos@email.com,elisa789,cliente
+6,Felipe Lima,felipe.lima@email.com,flima2024,cliente
+7,Gabriela Costa,gabriela.costa@email.com,gcosta321,cliente
+8,Hugo Martins,hugo.martins@email.com,hugom123,cliente
+9,Ivana Teixeira,ivana.teixeira@email.com,ivana456,cliente
+10,João Silva,joao.silva@email.com,joao2024,gerente

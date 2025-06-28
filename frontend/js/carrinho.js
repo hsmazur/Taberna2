@@ -218,7 +218,7 @@ function showLoading() {
 function showEmptyCart() {
     listaCarrinho.innerHTML = `
         <div class="empty-cart">
-            <img src="img/carrinho-vazio.png" alt="Carrinho vazio">
+            <img src="https://cdn-icons-png.flaticon.com/128/1288/1288704.png" alt="Carrinho vazio">
             <p>Seu carrinho está vazio</p>
             <a href="index.html" class="btn">Voltar ao cardápio</a>
         </div>

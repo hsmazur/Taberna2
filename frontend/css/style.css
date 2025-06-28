@@ -71,6 +71,35 @@ nav a:hover {
     background-color: #d4a76a;
     transform: translateY(-2px);
 }
+.botao-login,
+.botao-cadastro {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+}
+
+.botao-login {
+    background-color: #3a3226;
+    color: #d4a76a;
+    border-color: #d4a76a;
+}
+
+.botao-cadastro {
+    background-color: #1a120b;
+    color: #d4a76a;
+    border-color: #d4a76a;
+}
+
+.botao-login:hover,
+.botao-cadastro:hover {
+    background-color: #d4a76a;
+    color: #1a120b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
 
 #header2 {
     background-color: #3a3226;
@@ -290,4 +319,21 @@ main {
 .card:hover .card-preco {
     color: #b22222;
     transition: color 0.3s;
+}
+@media (max-width: 768px) {
+    .botoes-usuario {
+        margin: 1rem 0 0;
+        justify-content: center;
+        width: 100%;
+    }
+    
+    #header {
+        flex-wrap: wrap;
+    }
+    
+    nav {
+        width: 100%;
+        order: 3;
+        margin-top: 1rem;
+    }
 }

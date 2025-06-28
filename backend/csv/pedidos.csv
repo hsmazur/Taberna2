@@ -1,1 +1,2 @@
-data,metodoPagamento,total,itens
+id,usuarioId,metodoPagamento,subtotal,taxaEntrega,total,data,itens
+
