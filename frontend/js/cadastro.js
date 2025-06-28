@@ -1,6 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('form-cadastro');
     
+    // Verifica se já está logado
+    async function verificarLogin() {
+        try {
+            const response = await fetch('http://localhost:3000/usuario', {
+                credentials: 'include'
+            });
+            
+            if (response.ok) {
+                window.location.href = 'index.html';
+            }
+        } catch (error) {
+            console.error('Erro ao verificar login:', error);
+        }
+    }
+    
+    verificarLogin();
+
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -9,7 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const senha = document.getElementById('senha').value;
         const confirmarSenha = document.getElementById('confirmar-senha').value;
 
-        // Validação básica no front
         if (senha !== confirmarSenha) {
             alert('As senhas não coincidem!');
             return;
@@ -21,8 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ nome, email, senha })
-                // O tipo "cliente" será definido no servidor
+                body: JSON.stringify({ nome, email, senha }),
+                credentials: 'include'
             });
 
             const data = await response.json();
@@ -31,8 +47,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(data.message || 'Erro no cadastro');
             }
 
+            // Armazena no localStorage apenas o necessário para o frontend
+            localStorage.setItem('usuario', JSON.stringify({
+                nome: data.usuario.nome,
+                tipo: data.usuario.tipo
+            }));
+
             alert(`${data.message}\nBem-vindo, ${data.usuario.nome}!`);
-            window.location.href = 'index.html'; // Redireciona para a página inicial
+            window.location.href = 'index.html';
 
         } catch (error) {
             console.error('Erro:', error);

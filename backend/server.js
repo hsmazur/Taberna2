@@ -4,10 +4,12 @@ const path = require('path');
 const csv = require('fast-csv');
 const cors = require('cors');
 const app = express();
+const cookieParser = require('cookie-parser');
 
 // Configurações
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 // Caminhos dos arquivos (agora na pasta csv/)
 const CSV_DIR = path.join(__dirname, 'csv');
@@ -238,7 +240,15 @@ app.post('/login', async (req, res) => {
             });
         }
         
-        res.json({ 
+        res.cookie('usuario', JSON.stringify({
+            id: usuario.id,
+            nome: usuario.nome,
+            email: usuario.email,
+            tipo: usuario.tipo
+        }), { 
+            maxAge: 86400000, // 1 dia
+            httpOnly: true 
+        }).json({ 
             success: true,
             message: 'Login realizado com sucesso!',
             usuario: {
@@ -255,6 +265,19 @@ app.post('/login', async (req, res) => {
             message: 'Erro interno no servidor'
         });
     }
+});
+
+// Adicione uma rota para logout
+app.post('/logout', (req, res) => {
+    res.clearCookie('usuario').json({ success: true });
+});
+
+// Adicione uma rota para verificar o usuário logado
+app.get('/usuario', (req, res) => {
+    if (!req.cookies.usuario) {
+        return res.status(401).json({ error: 'Não logado' });
+    }
+    res.json(JSON.parse(req.cookies.usuario));
 });
 
 // Funções auxiliares

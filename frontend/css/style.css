@@ -100,6 +100,38 @@ nav a:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
+/* Estilo para o usuário logado */
+#usuario-logado {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+#nome-usuario {
+    color: #d4a76a;
+    font-size: 1.1rem;
+    margin-right: 0.5rem;
+}
+
+#logout {
+    color: #d4a76a;
+    text-decoration: none;
+    transition: all 0.3s;
+    padding: 0.5rem;
+    border-radius: 4px;
+}
+
+#logout:hover {
+    color: #1a120b;
+    background-color: #d4a76a;
+    transform: translateY(-2px);
+}
+
+/* Garante que apenas um dos dois seja mostrado */
+#usuario-logado,
+#usuario-deslogado {
+    margin-left: auto;
+}
 
 #header2 {
     background-color: #3a3226;
@@ -335,5 +367,13 @@ main {
         width: 100%;
         order: 3;
         margin-top: 1rem;
+    }
+}
+/* Responsividade */
+@media (max-width: 768px) {
+    #usuario-logado, #usuario-deslogado {
+        margin: 1rem 0 0;
+        width: 100%;
+        justify-content: center;
     }
 }

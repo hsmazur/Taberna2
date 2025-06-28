@@ -150,3 +150,48 @@ document.addEventListener('DOMContentLoaded', () => {
   carregarProdutos();
   criarBotaoCarrinho();
 });
+
+// Adicione estas funções no script.js
+async function verificarLogin() {
+    try {
+        const response = await fetch('/usuario');
+        if (response.ok) {
+            const usuario = await response.json();
+            mostrarUsuarioLogado(usuario);
+            return true;
+        }
+    } catch (error) {
+        console.error('Erro ao verificar login:', error);
+    }
+    mostrarUsuarioDeslogado();
+    return false;
+}
+
+function mostrarUsuarioLogado(usuario) {
+    const usuarioDiv = document.getElementById('usuario-logado');
+    const nomeSpan = document.getElementById('nome-usuario');
+    const logoutBtn = document.getElementById('logout');
+    const deslogadoDiv = document.getElementById('usuario-deslogado');
+    
+    nomeSpan.textContent = usuario.nome;
+    usuarioDiv.style.display = 'block';
+    deslogadoDiv.style.display = 'none';
+    
+    logoutBtn.onclick = async (e) => {
+        e.preventDefault();
+        await fetch('/logout', { method: 'POST' });
+        location.reload();
+    };
+}
+
+function mostrarUsuarioDeslogado() {
+    document.getElementById('usuario-logado').style.display = 'none';
+    document.getElementById('usuario-deslogado').style.display = 'block';
+}
+
+// Modifique o event listener no final para:
+document.addEventListener('DOMContentLoaded', () => {
+    carregarProdutos();
+    criarBotaoCarrinho();
+    verificarLogin();
+});
