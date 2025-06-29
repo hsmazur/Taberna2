@@ -81,7 +81,26 @@ app.get('/produtos', (req, res) => {
     });
 });
 
-// Rotas do Carrinho
+// Rotas do Carrinho - Versão Corrigida
+app.get('/carrinho', async (req, res) => {
+  try {
+    if (!fs.existsSync(CSV_CARRINHO)) {
+      return res.json([]);
+    }
+
+    const carrinho = await lerCSV(CSV_CARRINHO);
+    // Garante que as quantidades são números
+    const carrinhoFormatado = carrinho.map(item => ({
+      produtoId: item.produtoId,
+      quantidade: parseInt(item.quantidade) || 0
+    }));
+    res.json(carrinhoFormatado);
+  } catch (error) {
+    console.error('Erro ao ler carrinho:', error);
+    res.status(500).json({ error: 'Erro no servidor' });
+  }
+});
+
 app.post('/carrinho', async (req, res) => {
   const { produtoId, quantidade } = req.body;
   
@@ -90,41 +109,57 @@ app.post('/carrinho', async (req, res) => {
   }
 
   try {
+    // Carrega produtos para validar se o ID existe
+    const produtos = await lerCSV(CSV_PRODUTOS);
+    const produtoExiste = produtos.some(p => p.id == produtoId);
+    if (!produtoExiste) {
+      return res.status(404).json({ error: 'Produto não encontrado' });
+    }
+
+    // Carrega carrinho atual
     let carrinho = [];
     if (fs.existsSync(CSV_CARRINHO)) {
       carrinho = await lerCSV(CSV_CARRINHO);
     }
 
-    const itemIndex = carrinho.findIndex(item => item.produtoId === produtoId);
+    // Remove itens com quantidade <= 0 (limpeza)
+    carrinho = carrinho.filter(item => parseInt(item.quantidade) > 0);
+
+    const itemIndex = carrinho.findIndex(item => item.produtoId == produtoId);
     
-    if (itemIndex >= 0) {
-      if (quantidade <= 0) {
-        carrinho.splice(itemIndex, 1); // Remove item
-      } else {
-        carrinho[itemIndex].quantidade = quantidade; // Atualiza quantidade
+    if (quantidade <= 0) {
+      // Remove o item se existir
+      if (itemIndex >= 0) {
+        carrinho.splice(itemIndex, 1);
       }
-    } else if (quantidade > 0) {
-      carrinho.push({ produtoId, quantidade }); // Adiciona novo item
+    } else {
+      // Atualiza ou adiciona o item
+      if (itemIndex >= 0) {
+        carrinho[itemIndex].quantidade = quantidade;
+      } else {
+        carrinho.push({ produtoId, quantidade });
+      }
     }
 
+    // Salva no CSV
     await escreverCSV(CSV_CARRINHO, carrinho);
-    res.json({ success: true });
+    
+    // Retorna o carrinho atualizado
+    const carrinhoAtualizado = await lerCSV(CSV_CARRINHO);
+    res.json(carrinhoAtualizado);
   } catch (error) {
     console.error('Erro no carrinho:', error);
     res.status(500).json({ error: 'Erro no servidor' });
   }
 });
 
-app.get('/carrinho', async (req, res) => {
+// Nova rota para limpar o carrinho
+app.delete('/carrinho', async (req, res) => {
   try {
-    if (!fs.existsSync(CSV_CARRINHO)) {
-      return res.json([]);
-    }
-
-    const carrinho = await lerCSV(CSV_CARRINHO);
-    res.json(carrinho);
+    await escreverCSV(CSV_CARRINHO, []);
+    res.json({ success: true });
   } catch (error) {
-    console.error('Erro ao ler carrinho:', error);
+    console.error('Erro ao limpar carrinho:', error);
     res.status(500).json({ error: 'Erro no servidor' });
   }
 });

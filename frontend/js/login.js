@@ -3,9 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const erroEmail = document.getElementById('erro-email');
     const erroSenha = document.getElementById('erro-senha');
 
-    // REMOVA a verificação de login inicial
-    // (não queremos redirecionar se estiver na página de login)
-
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
