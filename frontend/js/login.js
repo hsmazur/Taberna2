@@ -33,6 +33,20 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const data = await response.json();
+            
+            if (response.ok) {
+                localStorage.setItem('usuario', JSON.stringify({
+                    nome: data.usuario.nome,
+                    tipo: data.usuario.tipo
+                }));
+    
+                // Verifica se há redirecionamento
+                const urlParams = new URLSearchParams(window.location.search);
+                const redirect = urlParams.get('redirect');
+    
+                alert(`${data.message}\nBem-vindo de volta, ${data.usuario.nome}!`);
+                window.location.href = redirect ? `${redirect}.html` : 'index.html';
+            }
 
             if (!response.ok) {
                 if (response.status === 404) {

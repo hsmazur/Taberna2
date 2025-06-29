@@ -4,25 +4,46 @@ const API_URL = 'http://localhost:3000';
 // Elementos principais
 let valorTotalElement, areaFormularios;
 
+// Adicione no início do arquivo, após as constantes:
+let usuarioLogado = null;
+
 // Inicialização
-document.addEventListener('DOMContentLoaded', () => {
-    valorTotalElement = document.getElementById('valor-total');
-    areaFormularios = document.getElementById('area-formularios');
-    
-    // Carrega o valor total do carrinho
-    carregarTotalCarrinho();
-    
-    // Configura os listeners dos radios
-    document.querySelectorAll('input[name="pagamento"]').forEach(radio => {
-        radio.addEventListener('change', (e) => mostrarFormularioPagamento(e.target.value));
-    });
-    
-    // Mostra o formulário inicial (dinheiro por padrão)
-    mostrarFormularioPagamento('dinheiro');
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        // Verifica se o usuário está logado
+        const response = await fetch(`${API_URL}/usuario`, {
+            credentials: 'include'
+        });
+        
+        if (!response.ok) {
+            // Se não estiver logado, redireciona para login
+            window.location.href = 'login.html?redirect=pagamento';
+            return;
+        }
+        
+        // Se estiver logado, continua o carregamento
+        usuarioLogado = await response.json();
+        valorTotalElement = document.getElementById('valor-total');
+        areaFormularios = document.getElementById('area-formularios');
+        
+        // Carrega o valor total do carrinho
+        await carregarTotalCarrinho();
+        
+        // Configura os listeners dos radios
+        document.querySelectorAll('input[name="pagamento"]').forEach(radio => {
+            radio.addEventListener('change', (e) => mostrarFormularioPagamento(e.target.value));
+        });
+        
+        // Mostra o formulário inicial (dinheiro por padrão)
+        mostrarFormularioPagamento('dinheiro');
+        
+    } catch (error) {
+        console.error('Erro ao verificar login:', error);
+        window.location.href = 'login.html?redirect=pagamento';
+    }
 });
 
 // Carrega o total do carrinho
-// Substitua a função carregarTotalCarrinho() por:
 async function carregarTotalCarrinho() {
   try {
     // Recupera o total do localStorage
@@ -285,44 +306,52 @@ function validarDataCartao(data) {
 }
 
 // Finaliza o pedido
-// Atualize a função finalizarPedido para:
 async function finalizarPedido(metodo) {
-  try {
-    // Recupera os dados do pedido
-    const total = localStorage.getItem('totalPedido') || '0';
-    const dadosEntrega = JSON.parse(localStorage.getItem('dadosEntrega') || {});
-    
-    // Recupera os itens do carrinho
-    const response = await fetch(`${API_URL}/carrinho`);
-    const itens = await response.json();
-    
-    // Recupera o usuário logado
-    const usuarioResponse = await fetch(`${API_URL}/usuario`, {
-      credentials: 'include'
-    });
-    const usuario = usuarioResponse.ok ? await usuarioResponse.json() : null;
-    
-    // Envia o pedido para o servidor
-    await fetch(`${API_URL}/pedidos`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        usuarioId: usuario ? usuario.id : null,
-        metodoPagamento: metodo,
-        total: parseFloat(total),
-        itens: itens.filter(item => item.quantidade > 0)
-      })
-    });
-    
-    // Limpa o carrinho e os dados temporários
-    localStorage.removeItem('totalPedido');
-    localStorage.removeItem('dadosEntrega');
-    
-    // Redireciona para confirmação
-    window.location.href = 'confirmacao.html';
-    
-  } catch (error) {
-    console.error('Erro ao finalizar pedido:', error);
-    alert('Erro ao processar pagamento. Tente novamente.');
-  }
+    try {
+        // Verificação redundante (segurança extra)
+        if (!usuarioLogado) {
+            window.location.href = 'login.html?redirect=pagamento';
+            return;
+        }
+
+        // Recupera os dados do pedido
+        const total = localStorage.getItem('totalPedido') || '0';
+        const dadosEntrega = JSON.parse(localStorage.getItem('dadosEntrega') || {});
+        
+        // Recupera os itens do carrinho
+        const response = await fetch(`${API_URL}/carrinho`);
+        const itens = await response.json();
+        
+        // Envia o pedido para o servidor
+        const pedidoResponse = await fetch(`${API_URL}/pedidos`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                usuarioId: usuarioLogado.id,
+                metodoPagamento: metodo,
+                total: parseFloat(total),
+                itens: itens.filter(item => item.quantidade > 0),
+                entrega: dadosEntrega.taxaEntrega > 0 ? dadosEntrega : null
+            }),
+            credentials: 'include'
+        });
+
+        if (!pedidoResponse.ok) {
+            throw new Error('Erro ao registrar pedido');
+        }
+        
+        // Limpa o carrinho e os dados temporários
+        await fetch(`${API_URL}/carrinho`, {
+            method: 'DELETE'
+        });
+        localStorage.removeItem('totalPedido');
+        localStorage.removeItem('dadosEntrega');
+        
+        // Redireciona para confirmação
+        window.location.href = 'confirmacao.html';
+        
+    } catch (error) {
+        console.error('Erro ao finalizar pedido:', error);
+        alert('Erro ao processar pagamento. Tente novamente.');
+    }
 }

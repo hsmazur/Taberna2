@@ -153,15 +153,15 @@ app.post('/carrinho', async (req, res) => {
   }
 });
 
-// Nova rota para limpar o carrinho
+// Rota para limpar o carrinho
 app.delete('/carrinho', async (req, res) => {
-  try {
-    await escreverCSV(CSV_CARRINHO, []);
-    res.json({ success: true });
-  } catch (error) {
-    console.error('Erro ao limpar carrinho:', error);
-    res.status(500).json({ error: 'Erro no servidor' });
-  }
+    try {
+        await escreverCSV(CSV_CARRINHO, []);
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Erro ao limpar carrinho:', error);
+        res.status(500).json({ error: 'Erro no servidor' });
+    }
 });
 
 // Rotas de Pedidos
