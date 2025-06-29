@@ -151,36 +151,20 @@ document.addEventListener('DOMContentLoaded', () => {
   criarBotaoCarrinho();
 });
 
-// Adicione estas funções no script.js
-async function verificarLogin() {
-    try {
-        const response = await fetch('/usuario');
-        if (response.ok) {
-            const usuario = await response.json();
-            mostrarUsuarioLogado(usuario);
-            return true;
-        }
-    } catch (error) {
-        console.error('Erro ao verificar login:', error);
-    }
-    mostrarUsuarioDeslogado();
-    return false;
-}
-
+// Funções para gerenciar a exibição do usuário logado
 function mostrarUsuarioLogado(usuario) {
     const usuarioDiv = document.getElementById('usuario-logado');
     const nomeSpan = document.getElementById('nome-usuario');
     const logoutBtn = document.getElementById('logout');
     const deslogadoDiv = document.getElementById('usuario-deslogado');
     
-    nomeSpan.textContent = usuario.nome;
+    nomeSpan.textContent = `Bem Vindo, ${usuario.nome}`;
     usuarioDiv.style.display = 'block';
     deslogadoDiv.style.display = 'none';
     
     logoutBtn.onclick = async (e) => {
         e.preventDefault();
-        await fetch('/logout', { method: 'POST' });
-        location.reload();
+        await logout();
     };
 }
 
@@ -189,7 +173,56 @@ function mostrarUsuarioDeslogado() {
     document.getElementById('usuario-deslogado').style.display = 'block';
 }
 
-// Modifique o event listener no final para:
+// Função para logout
+async function logout() {
+    try {
+        await fetch('http://localhost:3000/logout', {
+            method: 'POST',
+            credentials: 'include'
+        });
+        localStorage.removeItem('usuario');
+        window.location.href = 'index.html';
+    } catch (error) {
+        console.error('Erro ao fazer logout:', error);
+    }
+}
+
+// Função para verificar o status de login
+async function verificarLogin() {
+    try {
+        // Primeiro verifica se tem dados no localStorage (para exibição imediata)
+        const usuarioLocal = JSON.parse(localStorage.getItem('usuario'));
+        if (usuarioLocal) {
+            mostrarUsuarioLogado(usuarioLocal);
+        }
+        
+        // Depois valida com o servidor
+        const response = await fetch('http://localhost:3000/usuario', {
+            credentials: 'include'
+        });
+        
+        if (response.ok) {
+            const usuario = await response.json();
+            mostrarUsuarioLogado(usuario);
+            return true;
+        } else {
+            localStorage.removeItem('usuario');
+            mostrarUsuarioDeslogado();
+            return false;
+        }
+    } catch (error) {
+        console.error('Erro ao verificar login:', error);
+        mostrarUsuarioDeslogado();
+        return false;
+    }
+}
+
+// Chame apenas na página inicial
+if (window.location.pathname.endsWith('index.html') || 
+    window.location.pathname === '/') {
+    verificarLogin();
+}
+// Atualize o event listener no final para:
 document.addEventListener('DOMContentLoaded', () => {
     carregarProdutos();
     criarBotaoCarrinho();

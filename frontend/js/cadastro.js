@@ -1,22 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('form-cadastro');
     
-    // Verifica se já está logado
-    async function verificarLogin() {
-        try {
-            const response = await fetch('http://localhost:3000/usuario', {
-                credentials: 'include'
-            });
-            
-            if (response.ok) {
-                window.location.href = 'index.html';
-            }
-        } catch (error) {
-            console.error('Erro ao verificar login:', error);
-        }
-    }
-    
-    verificarLogin();
+    // REMOVA a verificação de login inicial
+    // (não queremos redirecionar se estiver na página de cadastro)
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -47,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(data.message || 'Erro no cadastro');
             }
 
-            // Armazena no localStorage apenas o necessário para o frontend
             localStorage.setItem('usuario', JSON.stringify({
                 nome: data.usuario.nome,
                 tipo: data.usuario.tipo

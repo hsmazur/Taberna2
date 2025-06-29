@@ -3,22 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const erroEmail = document.getElementById('erro-email');
     const erroSenha = document.getElementById('erro-senha');
 
-    // Verifica se já está logado
-    async function verificarLogin() {
-        try {
-            const response = await fetch('http://localhost:3000/usuario', {
-                credentials: 'include' // Importante para enviar cookies
-            });
-            
-            if (response.ok) {
-                window.location.href = 'index.html';
-            }
-        } catch (error) {
-            console.error('Erro ao verificar login:', error);
-        }
-    }
-    
-    verificarLogin();
+    // REMOVA a verificação de login inicial
+    // (não queremos redirecionar se estiver na página de login)
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -26,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = document.getElementById('email').value;
         const senha = document.getElementById('senha').value;
 
-        // Limpa mensagens de erro
         erroEmail.textContent = '';
         erroSenha.textContent = '';
 
@@ -47,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ email, senha }),
-                credentials: 'include' // Necessário para cookies
+                credentials: 'include'
             });
 
             const data = await response.json();
@@ -63,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Armazena no localStorage apenas o necessário para o frontend
             localStorage.setItem('usuario', JSON.stringify({
                 nome: data.usuario.nome,
                 tipo: data.usuario.tipo

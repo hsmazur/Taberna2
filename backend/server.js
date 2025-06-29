@@ -267,6 +267,14 @@ app.post('/login', async (req, res) => {
     }
 });
 
+//Rota de usuário
+app.get('/usuario', (req, res) => {
+    if (!req.cookies.usuario) {
+        return res.status(401).json({ error: 'Não logado' });
+    }
+    res.json(JSON.parse(req.cookies.usuario));
+});
+
 // Adicione uma rota para logout
 app.post('/logout', (req, res) => {
     res.clearCookie('usuario').json({ success: true });
