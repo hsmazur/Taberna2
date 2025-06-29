@@ -1,4 +1,2 @@
 id,usuarioId,metodoPagamento,subtotal,taxaEntrega,total,data,itens
 ,,,,,,,
-2,1,pix,,,67.00,2025-06-29T16:39:50.731Z,"[{""produtoId"":""8"",""quantidade"":2}]"
-3,1,dinheiro,,,31.00,2025-06-29T16:41:40.255Z,"[{""produtoId"":""8"",""quantidade"":1}]"
