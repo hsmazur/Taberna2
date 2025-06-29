@@ -22,28 +22,59 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Carrega o total do carrinho
+// Substitua a função carregarTotalCarrinho() por:
 async function carregarTotalCarrinho() {
-    try {
-        const response = await fetch(`${API_URL}/carrinho`);
-        const itens = await response.json();
-        
-        const responseProdutos = await fetch(`${API_URL}/produtos`);
-        const produtos = await responseProdutos.json();
-        
-        let total = 0;
-        itens.forEach(item => {
-            const produto = produtos.find(p => p.id == item.produtoId);
-            if (produto) {
-                total += produto.preco * item.quantidade;
-            }
-        });
-        
+  try {
+    // Recupera o total do localStorage
+    const totalSalvo = localStorage.getItem('totalPedido');
+    const dadosEntrega = JSON.parse(localStorage.getItem('dadosEntrega') || { taxaEntrega: 0 });
+    
+    if (totalSalvo) {
+      // Se já tiver o total calculado, usa ele
+      valorTotalElement.textContent = `Total: R$ ${parseFloat(totalSalvo).toFixed(2)}`;
+      
+      // Mostra a taxa de entrega se houver
+      if (dadosEntrega.taxaEntrega > 0) {
+        const subtotal = parseFloat(totalSalvo) - dadosEntrega.taxaEntrega;
+        valorTotalElement.innerHTML = `
+          <p>Subtotal: R$ ${subtotal.toFixed(2)}</p>
+          <p>Taxa de entrega: R$ ${dadosEntrega.taxaEntrega.toFixed(2)}</p>
+          <p><strong>Total: R$ ${totalSalvo}</strong></p>
+        `;
+      }
+    } else {
+      // Fallback: calcula o total manualmente (para caso direto no pagamento)
+      const response = await fetch(`${API_URL}/carrinho`);
+      const itens = await response.json();
+      
+      const responseProdutos = await fetch(`${API_URL}/produtos`);
+      const produtos = await responseProdutos.json();
+      
+      let total = 0;
+      itens.forEach(item => {
+        const produto = produtos.find(p => p.id == item.produtoId);
+        if (produto) {
+          total += produto.preco * item.quantidade;
+        }
+      });
+      
+      // Adiciona taxa se houver
+      if (dadosEntrega.taxaEntrega > 0) {
+        total += dadosEntrega.taxaEntrega;
+        valorTotalElement.innerHTML = `
+          <p>Subtotal: R$ ${(total - dadosEntrega.taxaEntrega).toFixed(2)}</p>
+          <p>Taxa de entrega: R$ ${dadosEntrega.taxaEntrega.toFixed(2)}</p>
+          <p><strong>Total: R$ ${total.toFixed(2)}</strong></p>
+        `;
+      } else {
         valorTotalElement.textContent = `Total: R$ ${total.toFixed(2)}`;
-        
-    } catch (error) {
-        console.error('Erro ao carregar carrinho:', error);
-        valorTotalElement.textContent = 'Erro ao carregar valor total';
+      }
     }
+    
+  } catch (error) {
+    console.error('Erro ao carregar carrinho:', error);
+    valorTotalElement.textContent = 'Erro ao carregar valor total';
+  }
 }
 
 // Mostra o formulário correspondente ao tipo de pagamento
@@ -254,16 +285,44 @@ function validarDataCartao(data) {
 }
 
 // Finaliza o pedido
+// Atualize a função finalizarPedido para:
 async function finalizarPedido(metodo) {
-    try {
-        // Simula o processamento do pagamento
-        alert(`Pagamento com ${metodo} realizado com sucesso!`);
-        
-        // Redireciona para página de confirmação
-        window.location.href = 'confirmacao.html';
-        
-    } catch (error) {
-        console.error('Erro ao finalizar pedido:', error);
-        alert('Erro ao processar pagamento. Tente novamente.');
-    }
+  try {
+    // Recupera os dados do pedido
+    const total = localStorage.getItem('totalPedido') || '0';
+    const dadosEntrega = JSON.parse(localStorage.getItem('dadosEntrega') || {});
+    
+    // Recupera os itens do carrinho
+    const response = await fetch(`${API_URL}/carrinho`);
+    const itens = await response.json();
+    
+    // Recupera o usuário logado
+    const usuarioResponse = await fetch(`${API_URL}/usuario`, {
+      credentials: 'include'
+    });
+    const usuario = usuarioResponse.ok ? await usuarioResponse.json() : null;
+    
+    // Envia o pedido para o servidor
+    await fetch(`${API_URL}/pedidos`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        usuarioId: usuario ? usuario.id : null,
+        metodoPagamento: metodo,
+        total: parseFloat(total),
+        itens: itens.filter(item => item.quantidade > 0)
+      })
+    });
+    
+    // Limpa o carrinho e os dados temporários
+    localStorage.removeItem('totalPedido');
+    localStorage.removeItem('dadosEntrega');
+    
+    // Redireciona para confirmação
+    window.location.href = 'confirmacao.html';
+    
+  } catch (error) {
+    console.error('Erro ao finalizar pedido:', error);
+    alert('Erro ao processar pagamento. Tente novamente.');
+  }
 }

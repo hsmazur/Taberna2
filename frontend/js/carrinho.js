@@ -233,12 +233,40 @@ async function confirmarPedido() {
       alert('Preencha todos os campos para entrega!');
       return;
     }
+
+    // Armazena os dados de entrega no localStorage
+    localStorage.setItem('dadosEntrega', JSON.stringify({
+      nome,
+      telefone,
+      endereco,
+      bairro,
+      taxaEntrega: TAXA_ENTREGA
+    }));
+  } else {
+    // Para retirada, não há taxa
+    localStorage.setItem('dadosEntrega', JSON.stringify({
+      taxaEntrega: 0
+    }));
   }
+
+  // Calcula o total com taxa
+  let total = calcularTotalCarrinho();
+  if (isEntrega) total += TAXA_ENTREGA;
+
+  // Armazena o total no localStorage
+  localStorage.setItem('totalPedido', total.toFixed(2));
 
   // Redireciona para a página de pagamento
   window.location.href = 'pagamento.html';
 }
 
+// Adicione esta nova função para calcular o total do carrinho
+function calcularTotalCarrinho() {
+  return carrinhoItens.reduce((total, item) => {
+    const produto = produtosDisponiveis.find(p => p.id == item.produtoId);
+    return total + (produto ? produto.preco * item.quantidade : 0);
+  }, 0);
+}
 // Funções auxiliares de UI
 function mostrarCarregando() {
   listaCarrinho.innerHTML = '<div class="loading"><p>Carregando seu carrinho...</p></div>';
