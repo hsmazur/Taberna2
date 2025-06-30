@@ -175,10 +175,18 @@ function mostrarUsuarioLogado(usuario) {
     const nomeSpan = document.getElementById('nome-usuario');
     const logoutBtn = document.getElementById('logout');
     const deslogadoDiv = document.getElementById('usuario-deslogado');
+    const adminPanel = document.getElementById('admin-panel');
     
     nomeSpan.textContent = `Bem-vindo, ${usuario.nome}`;
     usuarioDiv.style.display = 'block';
     deslogadoDiv.style.display = 'none';
+    
+    // Mostrar painel admin apenas para gerentes
+    if (usuario.tipo === 'gerente') {
+        adminPanel.style.display = 'block';
+    } else {
+        adminPanel.style.display = 'none';
+    }
     
     logoutBtn.onclick = async (e) => {
         e.preventDefault();

@@ -151,6 +151,32 @@ main {
     border-radius: 8px;
     box-shadow: 0 0 20px rgba(58, 50, 38, 0.4);
 }
+/* Botão Admin */
+#admin-panel {
+    margin: 0 auto 1.5rem;
+    max-width: 1200px;
+    padding: 0 1rem;
+}
+
+.botao-admin {
+    display: inline-block;
+    background-color: #8b4513;
+    color: #f5ecd7;
+    padding: 0.8rem 1.5rem;
+    font-size: 1.1rem;
+    text-decoration: none;
+    border-radius: 30px;
+    transition: all 0.3s;
+    border: 2px solid #5d2e0d;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-family: "MedievalSharp", cursive;
+}
+
+.botao-admin:hover {
+    background-color: #5d2e0d;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
 
 #legenda {
     font-size: 2.5rem;

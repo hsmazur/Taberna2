@@ -350,6 +350,119 @@ async function escreverCSV(arquivo, dados) {
   });
 }
 
+// Rotas de Produtos - CRUD Completo
+app.post('/produtos', async (req, res) => {
+    try {
+        const novoProduto = req.body;
+        
+        // Validação básica
+        if (!novoProduto.id || !novoProduto.nome || !novoProduto.preco) {
+            return res.status(400).json({ error: "Dados incompletos" });
+        }
+        
+        // Carrega produtos existentes
+        let produtos = [];
+        if (fs.existsSync(CSV_PRODUTOS)) {
+            produtos = await lerCSV(CSV_PRODUTOS);
+        }
+        
+        // Verifica se ID já existe
+        if (produtos.some(p => p.id == novoProduto.id)) {
+            return res.status(409).json({ error: "ID já existe" });
+        }
+        
+        // Adiciona novo produto
+        produtos.push(novoProduto);
+        await escreverCSV(CSV_PRODUTOS, produtos);
+        
+        res.json(novoProduto);
+    } catch (error) {
+        console.error('Erro ao criar produto:', error);
+        res.status(500).json({ error: 'Erro no servidor' });
+    }
+});
+
+app.put('/produtos', async (req, res) => {
+    try {
+        const produtoAtualizado = req.body;
+        
+        // Validação básica
+        if (!produtoAtualizado.id || !produtoAtualizado.nome || !produtoAtualizado.preco) {
+            return res.status(400).json({ error: "Dados incompletos" });
+        }
+        
+        // Carrega produtos existentes
+        let produtos = [];
+        if (fs.existsSync(CSV_PRODUTOS)) {
+            produtos = await lerCSV(CSV_PRODUTOS);
+        }
+        
+        // Encontra e atualiza o produto
+        const index = produtos.findIndex(p => p.id == produtoAtualizado.id);
+        if (index === -1) {
+            return res.status(404).json({ error: "Produto não encontrado" });
+        }
+        
+        produtos[index] = produtoAtualizado;
+        await escreverCSV(CSV_PRODUTOS, produtos);
+        
+        res.json(produtoAtualizado);
+    } catch (error) {
+        console.error('Erro ao atualizar produto:', error);
+        res.status(500).json({ error: 'Erro no servidor' });
+    }
+});
+
+app.delete('/produtos/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        
+        // Carrega produtos existentes
+        let produtos = [];
+        if (fs.existsSync(CSV_PRODUTOS)) {
+            produtos = await lerCSV(CSV_PRODUTOS);
+        }
+        
+        // Filtra removendo o produto com o ID especificado
+        const novosProdutos = produtos.filter(p => p.id != id);
+        
+        // Se o tamanho não mudou, produto não existia
+        if (novosProdutos.length === produtos.length) {
+            return res.status(404).json({ error: "Produto não encontrado" });
+        }
+        
+        await escreverCSV(CSV_PRODUTOS, novosProdutos);
+        
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Erro ao excluir produto:', error);
+        res.status(500).json({ error: 'Erro no servidor' });
+    }
+});
+
+app.get('/produtos/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        
+        // Carrega produtos existentes
+        let produtos = [];
+        if (fs.existsSync(CSV_PRODUTOS)) {
+            produtos = await lerCSV(CSV_PRODUTOS);
+        }
+        
+        // Encontra o produto
+        const produto = produtos.find(p => p.id == id);
+        if (!produto) {
+            return res.status(404).json({ error: "Produto não encontrado" });
+        }
+        
+        res.json(produto);
+    } catch (error) {
+        console.error('Erro ao buscar produto:', error);
+        res.status(500).json({ error: 'Erro no servidor' });
+    }
+});
+
 // Servir arquivos estáticos do frontend
 app.use(express.static(path.join(__dirname, '../frontend')));
 
