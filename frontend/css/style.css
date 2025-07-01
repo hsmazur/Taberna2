@@ -200,10 +200,10 @@ main {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Grid de Produtos */
+/* Grid de Produtos - 3 por linha */
 #produtosContainer {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    grid-template-columns: repeat(3, 1fr); /* Sempre 3 colunas */
     gap: 2rem;
     padding: 1rem;
 }
@@ -216,7 +216,10 @@ main {
     transition: all 0.3s ease;
     box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.1);
     display: flex;
+    flex-direction: column; /* Alinhamento vertical */
     align-items: center;
+    text-align: center;
+    height: 100%; /* Garante altura uniforme */
 }
 
 .card:hover {
@@ -225,17 +228,17 @@ main {
 }
 
 .card img {
-    width: 120px;
-    height: 120px;
+    width: 150px; /* Tamanho um pouco maior */
+    height: 150px;
     object-fit: cover;
     border: 2px solid #3a3226;
     border-radius: 8px;
-    margin-right: 1.5rem;
+    margin-bottom: 1rem; /* Espaço abaixo da imagem */
     box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
 }
 
 .card-info {
-    flex: 1;
+    width: 100%;
 }
 
 .card-info h3 {
@@ -248,16 +251,56 @@ main {
     color: #5c4d3d;
     font-size: 0.95rem;
     margin-bottom: 1rem;
+    min-height: 40px; /* Altura fixa para ingredientes */
 }
 
-/* Controles de Quantidade */
+.card-preco {
+    font-size: 1.6rem; /* Tamanho aumentado */
+    color: #8b0000;
+    font-weight: bold;
+    margin-top: auto; /* Empurra para baixo */
+    padding-top: 1rem;
+}
+
+/* Responsividade - ajuste para telas menores */
+@media (max-width: 1024px) {
+    #produtosContainer {
+        grid-template-columns: repeat(2, 1fr); /* 2 colunas em tablets */
+    }
+}
+
+@media (max-width: 600px) {
+    #produtosContainer {
+        grid-template-columns: 1fr; /* 1 coluna em mobile */
+    }
+    
+    .card {
+        max-width: 350px;
+        margin: 0 auto; /* Centraliza em mobile */
+    }
+}
+
+/* Efeito de hover mais suave */
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Sombra mais pronunciada no hover */
+.card:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Controles de Quantidade - Centralizado */
 .quantidade {
     display: flex;
-    align-items: center;
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
     gap: 0.8rem;
     margin-top: 1rem;
+    width: 100%; /* Ocupa toda a largura disponível */
 }
 
+/* Mantenha o restante do estilo dos botões */
 .btn-menos, .btn-mais {
     background-color: #3a3226;
     color: #f5ecd7;
