@@ -31,8 +31,9 @@
             </div>
 
             <div class="form-group">
-                <label for="imagem">URL da Imagem:</label>
-                <input type="text" name="imagem" id="imagem" class="crud-input" readonly>
+                <label for="imagem">Imagem do Produto:</label>
+                <input type="file" name="imagem" id="imagem" class="crud-input" accept="image/*" readonly>
+                <small id="nome-arquivo"></small>
             </div>
 
             <div class="form-group">
@@ -71,10 +72,11 @@
             </div>
         </div>
     </main>
-
+    
     <footer id="final">
-        <h3>Taberna do Dragão &copy; 2025</h3>
         <a href="../index.html" class="btn medieval-btn">Voltar ao Site</a>
+        <br> <br>
+        <h3>Taberna do Dragão &copy; 2025</h3>
     </footer>
 
     <script src="class.js"></script>

@@ -2,7 +2,7 @@ let listaProduto = [];
 let oQueEstaFazendo = '';
 let produto = null;
 
-// Inicialização - Carrega produtos do servidor
+// Inicialização
 document.addEventListener('DOMContentLoaded', async () => {
     await carregarProdutos();
     bloquearAtributos(true);
@@ -18,6 +18,9 @@ async function carregarProdutos() {
         mostrarAviso(`Erro: ${error.message}`);
     }
 }
+
+// Removemos a função de uploadImagem pois não será mais necessária
+// Já que as imagens seguem um padrão fixo
 
 function procurePorChavePrimaria(chave) {
     for (let i = 0; i < listaProduto.length; i++) {
@@ -60,7 +63,7 @@ function inserir() {
     visibilidadeDosBotoes('none', 'none', 'none', 'none', 'inline');
     oQueEstaFazendo = 'inserindo';
     mostrarAviso("INSERINDO - Digite os dados e clique em Salvar");
-    document.getElementById("imagem").focus();
+    document.getElementById("nome").focus();
 }
 
 function alterar() {
@@ -68,7 +71,7 @@ function alterar() {
     visibilidadeDosBotoes('none', 'none', 'none', 'none', 'inline');
     oQueEstaFazendo = 'alterando';
     mostrarAviso("ALTERANDO - Modifique os dados e clique em Salvar");
-    document.getElementById("imagem").focus();
+    document.getElementById("nome").focus();
 }
 
 function excluir() {
@@ -80,17 +83,19 @@ function excluir() {
 
 async function salvar() {
     const id = produto ? produto.id : parseInt(document.getElementById("id").value);
-    const imagem = document.getElementById("imagem").value;
     const nome = document.getElementById("nome").value;
     const ingredientes = document.getElementById("ingredientes").value;
     const preco = parseFloat(document.getElementById("preco").value);
 
-    if (!id || !imagem || !nome || !ingredientes || isNaN(preco)) {
+    if (!id || !nome || !ingredientes || isNaN(preco)) {
         mostrarAviso("Preencha todos os campos corretamente!");
         return;
     }
 
     try {
+        // Gera automaticamente o nome da imagem baseado no ID
+        const imagem = `lanche${id}.png`;
+        
         const novoProduto = { id, imagem, nome, ingredientes, preco };
         let metodo = 'POST';
         let url = 'http://localhost:3000/produtos';
@@ -130,9 +135,8 @@ async function salvar() {
     }
 }
 
-// Funções auxiliares (mantidas as originais)
+// Funções auxiliares
 function mostrarDadosProduto(produto) {
-    document.getElementById("imagem").value = produto.imagem;
     document.getElementById("nome").value = produto.nome;
     document.getElementById("ingredientes").value = produto.ingredientes;
     document.getElementById("preco").value = produto.preco;
@@ -140,7 +144,6 @@ function mostrarDadosProduto(produto) {
 }
 
 function limparAtributos() {
-    document.getElementById("imagem").value = "";
     document.getElementById("nome").value = "";
     document.getElementById("ingredientes").value = "";
     document.getElementById("preco").value = "";
@@ -148,7 +151,6 @@ function limparAtributos() {
 }
 
 function bloquearAtributos(soLeitura) {
-    document.getElementById("imagem").readOnly = soLeitura;
     document.getElementById("nome").readOnly = soLeitura;
     document.getElementById("ingredientes").readOnly = soLeitura;
     document.getElementById("preco").readOnly = soLeitura;
@@ -170,11 +172,17 @@ function mostrarAviso(mensagem) {
 function listar() {
     let html = "";
     listaProduto.forEach(produto => {
+        // Usa o padrão lanche+id.png para as imagens
+        const imagemSrc = `../img/lanche${produto.id}.png`;
+        
         html += `
             <div class="produto-item">
-                <strong>ID: ${produto.id}</strong> - ${produto.nome}<br>
-                <small>Ingredientes: ${produto.ingredientes}</small><br>
-                <span class="preco">R$ ${produto.preco.toFixed(2)}</span>
+                <img src="${imagemSrc}" alt="${produto.nome}" onerror="this.src='../img/sem-imagem.png'" width="100">
+                <div>
+                    <strong>ID: ${produto.id}</strong> - ${produto.nome}<br>
+                    <small>Ingredientes: ${produto.ingredientes}</small><br>
+                    <span class="preco">R$ ${produto.preco.toFixed(2)}</span>
+                </div>
             </div>
         `;
     });
@@ -198,7 +206,7 @@ function prepararESalvarCSV() {
     let textoCSV = "id,nome,preco,imagem,ingredientes\n";
     
     listaProduto.forEach(produto => {
-        textoCSV += `${produto.id},${produto.nome},${produto.preco},${produto.imagem},"${produto.ingredientes}"\n`;
+        textoCSV += `${produto.id},${produto.nome},${produto.preco},lanche${produto.id}.png,"${produto.ingredientes}"\n`;
     });
     
     const blob = new Blob([textoCSV], { type: 'text/csv' });
@@ -232,7 +240,7 @@ function abrirArquivoSalvoEmLocalPermanente() {
                         id: parseInt(id),
                         nome,
                         preco: parseFloat(preco),
-                        imagem,
+                        imagem: `lanche${id}.png`, // Força o padrão de nome
                         ingredientes: ingredientes.replace(/^"|"$/g, '')
                     };
                     
