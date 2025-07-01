@@ -164,6 +164,90 @@
     font-size: 1.1rem;
 }
 
+.crud-input {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    border: 1px solid #d4a76a;
+    border-radius: 4px;
+    background-color: #fff9e6;
+    font-family: "MedievalSharp", cursive;
+    font-size: 1rem;
+}
+
+.crud-input:read-only {
+    background-color: #f0e6cc;
+    cursor: not-allowed;
+}
+
+.produto-item {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: #fff9e6;
+    border: 1px solid #d4a76a;
+    border-radius: 4px;
+}
+
+.produto-item small {
+    color: #5c4d3d;
+}
+
+.preco {
+    color: #8b0000;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+/* Ajustes para os botões manterem consistência */
+.btn {
+    padding: 0.7rem 1.5rem;
+    margin: 0.3rem;
+    font-family: "MedievalSharp", cursive;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    border-radius: 30px;
+}
+
+.medieval-btn {
+    background-color: #3a3226;
+    color: #d4a76a;
+    border: 2px solid #d4a76a;
+}
+
+.medieval-btn:hover {
+    background-color: #1a120b;
+    transform: translateY(-2px);
+}
+
+.medieval-btn-success {
+    background-color: #2e7d32;
+    color: #f5ecd7;
+    border: 2px solid #1b5e20;
+}
+
+.medieval-btn-cancel {
+    background-color: #8b0000;
+    color: #f5ecd7;
+    border: 2px solid #6b0000;
+}
+
+.medieval-btn-secondary {
+    background-color: #8b4513;
+    color: #f5ecd7;
+    border: 2px solid #5d2e0d;
+}
+
+.aviso {
+    padding: 1rem;
+    margin-top: 1rem;
+    background-color: #fff9e6;
+    border-left: 5px solid #d4a76a;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    color: #1a120b;
+}
+
 /* Scrollbar personalizada */
 ::-webkit-scrollbar {
     width: 10px;

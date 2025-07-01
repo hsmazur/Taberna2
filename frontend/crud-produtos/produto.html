@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerenciar Cardápio - Taberna do Dragão</title>
+    <title>CRUD Produtos - Taberna do Dragão</title>
     <link rel="stylesheet" href="../css/header.css">
     <link rel="stylesheet" href="produto.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,38 +23,37 @@
     </header>
 
     <main class="crud-container">
-        <!-- Formulário CRUD -->
         <div class="crud-form">
             <div class="form-group">
                 <label for="id">ID:</label>
-                <input type="number" name="id" id="id">
-                <input type="button" value="Procurar" id="btProcure" onclick="procure()" class="btn medieval-btn">
+                <input type="number" name="id" id="id" class="crud-input">
+                <input type="button" value="Procurar" id="btProcure" onclick="procure()" class="btn medieval-btn" style="display:inline;">
             </div>
 
             <div class="form-group">
                 <label for="imagem">URL da Imagem:</label>
-                <input type="text" name="imagem" id="imagem">
+                <input type="text" name="imagem" id="imagem" class="crud-input" readonly>
             </div>
 
             <div class="form-group">
                 <label for="nome">Nome do Produto:</label>
-                <input type="text" name="nome" id="nome">
+                <input type="text" name="nome" id="nome" class="crud-input" readonly>
             </div>
 
             <div class="form-group">
                 <label for="ingredientes">Ingredientes:</label>
-                <input type="text" name="ingredientes" id="ingredientes">
+                <input type="text" name="ingredientes" id="ingredientes" class="crud-input" readonly>
             </div>
 
             <div class="form-group">
                 <label for="preco">Preço (R$):</label>
-                <input type="number" name="preco" id="preco" step="0.01">
+                <input type="number" name="preco" id="preco" class="crud-input" readonly>
             </div>
 
             <div class="button-group">
                 <input type="button" value="Inserir" id="btInserir" onclick="inserir()" class="btn medieval-btn" style="display:none;">
                 <input type="button" value="Alterar" id="btAlterar" onclick="alterar()" class="btn medieval-btn" style="display:none;">
-                <input type="button" value="Excluir" id="btExcluir" onclick="excluir()" class="btn medieval-btn" style="display:none;">
+                <input type="button" value="Excluir" id="btExcluir" onclick="excluir()" class="btn medieval-btn-cancel" style="display:none;">
                 <input type="button" value="Salvar" id="btSalvar" onclick="salvar()" class="btn medieval-btn-success" style="display:none;">
                 <input type="button" value="Cancelar" id="btCancelar" onclick="cancelarOperacao()" class="btn medieval-btn-cancel" style="display:none;">
             </div>
@@ -62,7 +61,6 @@
             <div id="divAviso" class="aviso"></div>
         </div>
 
-        <!-- Lista de Produtos -->
         <div class="produtos-list">
             <h3>Cardápio Atual</h3>
             <div id="outputSaida" class="lista-produtos"></div>
