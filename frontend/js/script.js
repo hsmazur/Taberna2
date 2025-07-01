@@ -171,31 +171,46 @@ async function verificarLogin() {
 }
 
 function mostrarUsuarioLogado(usuario) {
-    const usuarioDiv = document.getElementById('usuario-logado');
-    const nomeSpan = document.getElementById('nome-usuario');
-    const logoutBtn = document.getElementById('logout');
-    const deslogadoDiv = document.getElementById('usuario-deslogado');
-    const adminPanel = document.getElementById('admin-panel');
+    const elements = {
+        usuarioDiv: document.getElementById('usuario-logado'),
+        nomeSpan: document.getElementById('nome-usuario'),
+        logoutBtn: document.getElementById('logout'),
+        deslogadoDiv: document.getElementById('usuario-deslogado'),
+        adminPanel: document.getElementById('admin-panel')
+    };
     
-    nomeSpan.textContent = `Bem-vindo, ${usuario.nome}`;
-    usuarioDiv.style.display = 'block';
-    deslogadoDiv.style.display = 'none';
+    // Atualiza informações do usuário
+    elements.nomeSpan.textContent = `Bem-vindo, ${usuario.nome}`;
+    elements.usuarioDiv.style.display = 'flex';
+    elements.deslogadoDiv.style.display = 'none';
     
-    // Mostrar painel admin apenas para gerentes
-    if (usuario.tipo === 'gerente') {
-        adminPanel.style.display = 'block';
-    } else {
-        adminPanel.style.display = 'none';
+    // Controle do painel de admin
+    const isGerente = usuario.tipo === 'gerente';
+    elements.adminPanel.style.display = isGerente ? 'flex' : 'none';
+    
+    if (isGerente) {
+        elements.adminPanel.style.cssText = `
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin: 0 auto 1.5rem;
+            max-width: 1200px;
+            padding: 0 1rem;
+        `;
     }
     
-    logoutBtn.onclick = async (e) => {
+    // Configura logout
+    elements.logoutBtn.onclick = async (e) => {
         e.preventDefault();
         await logout();
     };
     
+    // Armazena dados do usuário
     localStorage.setItem('usuario', JSON.stringify({
         nome: usuario.nome,
-        tipo: usuario.tipo
+        tipo: usuario.tipo,
+        email: usuario.email // Adicionado email se necessário
     }));
 }
 

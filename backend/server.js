@@ -463,6 +463,164 @@ app.get('/produtos/:id', async (req, res) => {
     }
 });
 
+// Rotas de Usuários - CRUD Completo
+app.get('/usuarios', (req, res) => {
+  if (!fs.existsSync(CSV_USUARIOS)) {
+    return res.status(404).json({ error: "Arquivo de usuários não encontrado" });
+  }
+
+  const usuarios = [];
+  fs.createReadStream(CSV_USUARIOS)
+    .pipe(csv.parse({ 
+      headers: true,
+      skipLines: 0,
+      strictColumnHandling: true
+    }))
+    .on('data', (row) => {
+      try {
+        usuarios.push({
+          id: parseInt(row.id),
+          nome: row.nome,
+          email: row.email,
+          senha: row.senha,
+          tipo: row.tipo
+        });
+      } catch (error) {
+        console.error('Erro ao processar linha:', row);
+      }
+    })
+    .on('end', () => res.json(usuarios))
+    .on('error', (err) => {
+      console.error("Erro ao ler usuários:", err);
+      res.status(500).json({ error: "Erro no servidor" });
+    });
+});
+
+app.post('/usuarios', async (req, res) => {
+    try {
+        const novoUsuario = req.body;
+        
+        // Validação básica
+        if (!novoUsuario.id || !novoUsuario.nome || !novoUsuario.email || !novoUsuario.senha || !novoUsuario.tipo) {
+            return res.status(400).json({ error: "Dados incompletos" });
+        }
+        
+        // Carrega usuários existentes
+        let usuarios = [];
+        if (fs.existsSync(CSV_USUARIOS)) {
+            usuarios = await lerCSV(CSV_USUARIOS);
+        }
+        
+        // Verifica se ID já existe
+        if (usuarios.some(u => u.id == novoUsuario.id)) {
+            return res.status(409).json({ error: "ID já existe" });
+        }
+
+        // Verifica se email já existe
+        if (usuarios.some(u => u.email === novoUsuario.email)) {
+            return res.status(409).json({ error: "Email já cadastrado" });
+        }
+        
+        // Adiciona novo usuário
+        usuarios.push(novoUsuario);
+        await escreverCSV(CSV_USUARIOS, usuarios);
+        
+        res.json(novoUsuario);
+    } catch (error) {
+        console.error('Erro ao criar usuário:', error);
+        res.status(500).json({ error: 'Erro no servidor' });
+    }
+});
+
+app.put('/usuarios', async (req, res) => {
+    try {
+        const usuarioAtualizado = req.body;
+        
+        // Validação básica
+        if (!usuarioAtualizado.id || !usuarioAtualizado.nome || !usuarioAtualizado.email || !usuarioAtualizado.senha || !usuarioAtualizado.tipo) {
+            return res.status(400).json({ error: "Dados incompletos" });
+        }
+        
+        // Carrega usuários existentes
+        let usuarios = [];
+        if (fs.existsSync(CSV_USUARIOS)) {
+            usuarios = await lerCSV(CSV_USUARIOS);
+        }
+        
+        // Encontra e atualiza o usuário
+        const index = usuarios.findIndex(u => u.id == usuarioAtualizado.id);
+        if (index === -1) {
+            return res.status(404).json({ error: "Usuário não encontrado" });
+        }
+
+        // Verifica se o email foi alterado para um que já existe
+        if (usuarioAtualizado.email !== usuarios[index].email && 
+            usuarios.some(u => u.email === usuarioAtualizado.email)) {
+            return res.status(409).json({ error: "Email já está em uso por outro usuário" });
+        }
+        
+        usuarios[index] = usuarioAtualizado;
+        await escreverCSV(CSV_USUARIOS, usuarios);
+        
+        res.json(usuarioAtualizado);
+    } catch (error) {
+        console.error('Erro ao atualizar usuário:', error);
+        res.status(500).json({ error: 'Erro no servidor' });
+    }
+});
+
+app.delete('/usuarios/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        
+        // Carrega usuários existentes
+        let usuarios = [];
+        if (fs.existsSync(CSV_USUARIOS)) {
+            usuarios = await lerCSV(CSV_USUARIOS);
+        }
+        
+        // Filtra removendo o usuário com o ID especificado
+        const novosUsuarios = usuarios.filter(u => u.id != id);
+        
+        // Se o tamanho não mudou, usuário não existia
+        if (novosUsuarios.length === usuarios.length) {
+            return res.status(404).json({ error: "Usuário não encontrado" });
+        }
+        
+        await escreverCSV(CSV_USUARIOS, novosUsuarios);
+        
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Erro ao excluir usuário:', error);
+        res.status(500).json({ error: 'Erro no servidor' });
+    }
+});
+
+app.get('/usuarios/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        
+        // Carrega usuários existentes
+        let usuarios = [];
+        if (fs.existsSync(CSV_USUARIOS)) {
+            usuarios = await lerCSV(CSV_USUARIOS);
+        }
+        
+        // Encontra o usuário
+        const usuario = usuarios.find(u => u.id == id);
+        if (!usuario) {
+            return res.status(404).json({ error: "Usuário não encontrado" });
+        }
+        
+        // Remove a senha antes de retornar
+        const { senha, ...usuarioSemSenha } = usuario;
+        res.json(usuarioSemSenha);
+    } catch (error) {
+        console.error('Erro ao buscar usuário:', error);
+        res.status(500).json({ error: 'Erro no servidor' });
+    }
+});
+
 // Servir arquivos estáticos do frontend
 app.use(express.static(path.join(__dirname, '../frontend')));
 

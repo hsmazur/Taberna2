@@ -151,14 +151,16 @@ main {
     border-radius: 8px;
     box-shadow: 0 0 20px rgba(58, 50, 38, 0.4);
 }
-/* Botão Admin */
+/* Atualize o estilo do admin-panel e botões */
 #admin-panel {
+    display: none;
     margin: 0 auto 1.5rem;
     max-width: 1200px;
     padding: 0 1rem;
+    text-align: center;
 }
 
-.botao-admin {
+#admin-panel .botao-admin {
     display: inline-block;
     background-color: #8b4513;
     color: #f5ecd7;
@@ -170,12 +172,22 @@ main {
     border: 2px solid #5d2e0d;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     font-family: "MedievalSharp", cursive;
+    margin: 0 0.5rem;
 }
 
-.botao-admin:hover {
+#admin-panel .botao-admin:hover {
     background-color: #5d2e0d;
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Adicione media query para responsividade */
+@media (max-width: 600px) {
+    #admin-panel .botao-admin {
+        display: block;
+        margin: 0.5rem auto;
+        width: 80%;
+    }
 }
 
 #legenda {
