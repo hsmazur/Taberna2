@@ -148,6 +148,7 @@
 
 /* Botão Confirmar */
 .botao-confirmar {
+    font-family: 'MedievalSharp', cursive;
     display: block;
     width: 100%;
     padding: 1rem;

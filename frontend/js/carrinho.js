@@ -98,7 +98,7 @@ function renderizarCarrinho() {
             <button class="btn-diminuir" data-id="${produto.id}">−</button>
             <span class="quantidade">${item.quantidade}</span>
             <button class="btn-aumentar" data-id="${produto.id}">+</button>
-            <button class="btn-remover" data-id="${produto.id}">Remover</button>
+            <button class="btn-remover" data-id="${produto.id}">X</button>
           </div>
           <p class="preco">R$ ${produto.preco.toFixed(2)}</p>
           <p class="subtotal">Subtotal: R$ ${subtotal.toFixed(2)}</p>

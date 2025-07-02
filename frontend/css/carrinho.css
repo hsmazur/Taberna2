@@ -217,6 +217,8 @@ main {
     border-radius: 30px;
     transition: all 0.3s;
     border: 2px solid #d4a76a;
+    font-family: 'MedievalSharp', cursive;
+    cursor: pointer;
 }
 
 .botao_altera:hover {
@@ -281,18 +283,7 @@ main {
     font-family: 'MedievalSharp', cursive;
 }
 
-/* Botão Confirmar */
-#btn-confirmar {
-    background-color: #1a120b;
-    color: #d4a76a;
-    border: 2px solid #d4a76a;
-    cursor: pointer;
-}
 
-#btn-confirmar:hover {
-    background-color: #d4a76a;
-    color: #1a120b;
-}
 
 /* Responsividade */
 @media (max-width: 768px) {
