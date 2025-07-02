@@ -1,4 +1,3 @@
-
 // Configurações
 const API_URL = 'http://localhost:3000';
 const TAXA_ENTREGA = 5.00;
@@ -33,6 +32,13 @@ async function inicializarCarrinho() {
   });
 
   btnConfirmar.addEventListener('click', confirmarPedido);
+
+  // Configura validação do telefone
+  const telefoneInput = document.getElementById('telefone');
+  if (telefoneInput) {
+    telefoneInput.addEventListener('input', formatarTelefone);
+    telefoneInput.addEventListener('blur', validarTelefone);
+  }
 
   // Carrega os dados
   await carregarDados();
@@ -84,7 +90,7 @@ function renderizarCarrinho() {
   // Para cada item no carrinho
   carrinhoItens.forEach(item => {
     const produto = produtosDisponiveis.find(p => p.id == item.produtoId);
-    if (!produto) return; // Se o produto não existir, ignora
+    if (!produto) return;
 
     const subtotal = produto.preco * item.quantidade;
     total += subtotal;
@@ -164,20 +170,17 @@ async function alterarQuantidadeItem(id, alteracao) {
 
     const novaQuantidade = item.quantidade + alteracao;
     
-    // Se a quantidade for <= 0, remove o item
     if (novaQuantidade <= 0) {
       await removerItem(id);
       return;
     }
 
-    // Atualiza no servidor
     await fetch(`${API_URL}/carrinho`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ produtoId: id, quantidade: novaQuantidade })
     });
 
-    // Recarrega o carrinho
     await carregarDados();
     
   } catch (error) {
@@ -198,7 +201,6 @@ async function removerItem(id) {
         body: JSON.stringify({ produtoId: id, quantidade: 0 })
       });
       
-      // Recarrega o carrinho
       await carregarDados();
       
     } catch (error) {
@@ -214,7 +216,40 @@ async function removerItem(id) {
 function atualizarTipoEntrega() {
   const isEntrega = document.querySelector('input[name="tipo-entrega"]:checked')?.value === 'entrega';
   formularioEntrega.classList.toggle('hidden', !isEntrega);
-  renderizarCarrinho(); // Atualiza o total
+  renderizarCarrinho();
+}
+
+// Função para formatar o número de telefone
+function formatarTelefone(e) {
+  let value = e.target.value.replace(/\D/g, '');
+  
+  if (value.length > 2) {
+    value = `(${value.substring(0, 2)}) ${value.substring(2)}`;
+  }
+  if (value.length > 10) {
+    value = `${value.substring(0, 10)}-${value.substring(10, 14)}`;
+  }
+  
+  e.target.value = value;
+}
+
+// Função para validar o número de telefone
+function validarTelefone(e) {
+  const telefone = e.target.value.replace(/\D/g, '');
+  const erroTelefone = document.getElementById('erro-telefone');
+  
+  if (telefone.length < 10 || telefone.length > 11) {
+    if (erroTelefone) {
+      erroTelefone.textContent = 'Telefone inválido (DDD + número)';
+      erroTelefone.style.display = 'block';
+    }
+    return false;
+  }
+  
+  if (erroTelefone) {
+    erroTelefone.style.display = 'none';
+  }
+  return true;
 }
 
 /**
@@ -235,23 +270,32 @@ async function confirmarPedido() {
       return;
     }
 
+    // Valida especificamente o telefone
+    if (!validarTelefone({ target: document.getElementById('telefone') })) {
+      alert('Por favor, insira um número de telefone válido com DDD');
+      return;
+    }
+
     // Armazena os dados de entrega no localStorage
     localStorage.setItem('dadosEntrega', JSON.stringify({
       nome,
-      telefone,
+      telefone: telefone.replace(/\D/g, ''),
       endereco,
       bairro,
       taxaEntrega: TAXA_ENTREGA
     }));
   } else {
-    // Para retirada, não há taxa
     localStorage.setItem('dadosEntrega', JSON.stringify({
       taxaEntrega: 0
     }));
   }
 
   // Calcula o total com taxa
-  let total = calcularTotalCarrinho();
+  let total = carrinhoItens.reduce((total, item) => {
+    const produto = produtosDisponiveis.find(p => p.id == item.produtoId);
+    return total + (produto ? produto.preco * item.quantidade : 0);
+  }, 0);
+  
   if (isEntrega) total += TAXA_ENTREGA;
 
   // Armazena o total no localStorage
@@ -261,13 +305,6 @@ async function confirmarPedido() {
   window.location.href = 'pagamento.html';
 }
 
-// Adicione esta nova função para calcular o total do carrinho
-function calcularTotalCarrinho() {
-  return carrinhoItens.reduce((total, item) => {
-    const produto = produtosDisponiveis.find(p => p.id == item.produtoId);
-    return total + (produto ? produto.preco * item.quantidade : 0);
-  }, 0);
-}
 // Funções auxiliares de UI
 function mostrarCarregando() {
   listaCarrinho.innerHTML = '<div class="loading"><p>Carregando seu carrinho...</p></div>';
