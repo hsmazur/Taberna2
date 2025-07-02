@@ -370,22 +370,39 @@ main {
     color: #d4a76a;
     padding: 2rem;
     margin-top: 3rem;
+    text-align: center;
 }
 
 #final h3 {
-    margin: 1rem 0;
-    font-size: 1.2rem;
+    margin: 0.5rem 0;
 }
 
 #final a {
     color: #d4a76a;
     text-decoration: none;
-    transition: color 0.3s;
 }
 
 #final a:hover {
-    color: #fff;
     text-decoration: underline;
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #8b4513;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #5d2e0d;
 }
 
 /* Responsividade */

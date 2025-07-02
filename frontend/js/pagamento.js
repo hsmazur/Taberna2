@@ -119,7 +119,7 @@ function mostrarFormularioPagamento(tipo) {
         pix: `
             <div class="formulario-pagamento">
                 <h3>Pagamento via PIX</h3>
-                <p>Chave PIX: <strong>taberna@dragao.com</strong></p>
+                <p>Chave PIX: <strong>tabernadragao@email.com</strong></p>
                 <div class="qr-code-container">
                     <button id="gerar-qrcode">Mostrar QR Code</button>
                     <img id="qr-code-image" src="img/qrcode.png" alt="QR Code PIX" style="display: none; max-width: 200px; margin: 1rem auto;">
