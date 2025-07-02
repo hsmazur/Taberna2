@@ -48,7 +48,7 @@ async function carregarTotalCarrinho() {
   try {
     // Recupera o total do localStorage
     const totalSalvo = localStorage.getItem('totalPedido');
-    const dadosEntrega = JSON.parse(localStorage.getItem('dadosEntrega') || { taxaEntrega: 0 });
+    const dadosEntrega = JSON.parse(localStorage.getItem('dadosEntrega') || '{"taxaEntrega": 0}');
     
     if (totalSalvo) {
       // Se já tiver o total calculado, usa ele
@@ -154,6 +154,38 @@ function mostrarFormularioPagamento(tipo) {
     configurarEventosFormulario(tipo);
 }
 
+// Algoritmo de Luhn para validar número do cartão
+function validarNumeroCartaoLuhn(numero) {
+    // Remove todos os espaços e caracteres não numéricos
+    const numeroLimpo = numero.replace(/\s+/g, '').replace(/[^0-9]/g, '');
+    
+    // Verifica se tem comprimento válido (normalmente 13-19 dígitos)
+    if (numeroLimpo.length < 13 || numeroLimpo.length > 19) {
+        return false;
+    }
+
+    let soma = 0;
+    let deveDobrar = false;
+
+    // Percorre os dígitos da direita para a esquerda
+    for (let i = numeroLimpo.length - 1; i >= 0; i--) {
+        let digito = parseInt(numeroLimpo.charAt(i), 10);
+
+        if (deveDobrar) {
+            digito *= 2;
+            if (digito > 9) {
+                digito = (digito % 10) + 1;
+            }
+        }
+
+        soma += digito;
+        deveDobrar = !deveDobrar;
+    }
+
+    // O número é válido se a soma for múltiplo de 10
+    return soma % 10 === 0;
+}
+
 // Configura os eventos específicos de cada formulário
 function configurarEventosFormulario(tipo) {
     switch (tipo) {
@@ -179,11 +211,10 @@ function configurarEventosFormulario(tipo) {
                 }
                 e.target.value = value;
                 
-                // Validação básica (16 dígitos)
-                const numeros = value.replace(/\s/g, '');
+                // Validação com algoritmo de Luhn
                 const erro = document.getElementById('erro-numero');
-                if (numeros.length !== 16) {
-                    erro.textContent = 'Número do cartão inválido (16 dígitos)';
+                if (!validarNumeroCartaoLuhn(value)) {
+                    erro.textContent = 'Número do cartão inválido';
                     erro.style.display = 'block';
                 } else {
                     erro.style.display = 'none';
@@ -252,7 +283,7 @@ function validarFormulario(tipo) {
             const cvv = document.getElementById('cvv-cartao').value;
             const nome = document.getElementById('nome-cartao').value.trim();
             
-            if (numero.length !== 16) {
+            if (!validarNumeroCartaoLuhn(numero)) {
                 alert('Número do cartão inválido!');
                 return false;
             }
@@ -316,7 +347,7 @@ async function finalizarPedido(metodo) {
 
         // Recupera os dados do pedido
         const total = localStorage.getItem('totalPedido') || '0';
-        const dadosEntrega = JSON.parse(localStorage.getItem('dadosEntrega') || {});
+        const dadosEntrega = JSON.parse(localStorage.getItem('dadosEntrega') || '{}');
         
         // Recupera os itens do carrinho
         const response = await fetch(`${API_URL}/carrinho`);

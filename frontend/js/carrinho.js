@@ -1,3 +1,4 @@
+
 // Configurações
 const API_URL = 'http://localhost:3000';
 const TAXA_ENTREGA = 5.00;
