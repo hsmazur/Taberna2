@@ -1,8 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('form-cadastro');
-    
-    // REMOVA a verificação de login inicial
-    // (não queremos redirecionar se estiver na página de cadastro)
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -17,29 +14,53 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        if (senha.length < 8) {
+            alert('A senha deve ter no mínimo 8 caracteres');
+            return;
+        }
+
         try {
-            const response = await fetch('http://localhost:3000/cadastrar', {
+            // 1. Faz o cadastro
+            const cadastroResponse = await fetch('http://localhost:3000/cadastrar', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ nome, email, senha }),
                 credentials: 'include'
             });
 
-            const data = await response.json();
+            const cadastroData = await cadastroResponse.json();
 
-            if (!response.ok) {
-                throw new Error(data.message || 'Erro no cadastro');
+            if (!cadastroResponse.ok) {
+                throw new Error(cadastroData.message || 'Erro no cadastro');
             }
 
+            // 2. Faz login automaticamente após o cadastro
+            const loginResponse = await fetch('http://localhost:3000/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, senha }),
+                credentials: 'include'
+            });
+
+            const loginData = await loginResponse.json();
+
+            if (!loginResponse.ok) {
+                throw new Error('Falha ao autenticar após cadastro');
+            }
+
+            // 3. Armazena os dados do usuário
             localStorage.setItem('usuario', JSON.stringify({
-                nome: data.usuario.nome,
-                tipo: data.usuario.tipo
+                nome: loginData.usuario.nome,
+                tipo: loginData.usuario.tipo,
+                email: loginData.usuario.email
             }));
 
-            alert(`${data.message}\nBem-vindo, ${data.usuario.nome}!`);
-            window.location.href = 'index.html';
+            // 4. Redireciona para a página inicial
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirect = urlParams.get('redirect');
+            
+            alert(`Cadastro realizado com sucesso!\nBem-vindo, ${loginData.usuario.nome}!`);
+            window.location.href = redirect ? `${redirect}.html` : 'index.html';
 
         } catch (error) {
             console.error('Erro:', error);
