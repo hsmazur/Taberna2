@@ -240,7 +240,7 @@ function abrirArquivoSalvoEmLocalPermanente() {
                         id: parseInt(id),
                         nome,
                         preco: parseFloat(preco),
-                        imagem: `lanche${id}.png`, // Força o padrão de nome
+                        imagem: `img/lanche${id}.png`, // Força o padrão de nome
                         ingredientes: ingredientes.replace(/^"|"$/g, '')
                     };
                     
