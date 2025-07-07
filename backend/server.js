@@ -440,25 +440,66 @@ app.delete('/produtos/:id', async (req, res) => {
     }
 });
 
-app.get('/produtos/:id', async (req, res) => {
+// Substitua a rota GET /produtos por esta versão
+app.get('/produtos', (req, res) => {
+  if (!fs.existsSync(CSV_PRODUTOS)) {
+    return res.status(404).json({ error: "Arquivo de produtos não encontrado" });
+  }
+
+  const produtos = [];
+  fs.createReadStream(CSV_PRODUTOS)
+    .pipe(csv.parse({ 
+      headers: true,
+      skipLines: 0,
+      strictColumnHandling: true
+    }))
+    .on('data', (row) => {
+      try {
+        const imagem = row.imagem.includes('img/') ? row.imagem : `img/${row.imagem}`;
+        
+        produtos.push({
+          id: parseInt(row.id),
+          nome: row.nome,
+          preco: parseFloat(row.preco),
+          imagem: imagem,  // Usa o caminho corrigido
+          ingredientes: row.ingredientes
+        });
+      } catch (error) {
+        console.error('Erro ao processar linha:', row);
+      }
+    })
+    .on('end', () => res.json(produtos))
+    .on('error', (err) => {
+      console.error("Erro ao ler produtos:", err);
+      res.status(500).json({ error: "Erro no servidor" });
+    });
+});
+
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' }); // Pasta temporária para uploads
+
+// Rota para upload de imagens
+app.post('/upload-imagem', upload.single('imagem'), async (req, res) => {
     try {
-        const id = req.params.id;
-        
-        // Carrega produtos existentes
-        let produtos = [];
-        if (fs.existsSync(CSV_PRODUTOS)) {
-            produtos = await lerCSV(CSV_PRODUTOS);
+        if (!req.file) {
+            return res.status(400).json({ error: 'Nenhuma imagem enviada' });
         }
-        
-        // Encontra o produto
-        const produto = produtos.find(p => p.id == id);
-        if (!produto) {
-            return res.status(404).json({ error: "Produto não encontrado" });
+
+        const { id } = req.body;
+        if (!id) {
+            return res.status(400).json({ error: 'ID do produto não fornecido' });
         }
-        
-        res.json(produto);
+
+        // Define o novo nome e caminho da imagem
+        const novoNome = `lanche${id}.png`;
+        const caminhoDestino = path.join(__dirname, '../frontend/img', novoNome);
+
+        // Move o arquivo para a pasta final
+        fs.renameSync(req.file.path, caminhoDestino);
+
+        res.json({ success: true, imagem: novoNome });
     } catch (error) {
-        console.error('Erro ao buscar produto:', error);
+        console.error('Erro no upload:', error);
         res.status(500).json({ error: 'Erro no servidor' });
     }
 });

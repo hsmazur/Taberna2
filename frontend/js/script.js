@@ -52,8 +52,11 @@ function exibirProdutos(produtos) {
         card.className = "card";
         card.dataset.id = produto.id;
 
+        // Corrige o caminho da imagem - remove o '../' pois as imagens estão na mesma hierarquia
+        const imagemSrc = `img/lanche${produto.id}.png`;
+        
         card.innerHTML = `
-            <img src="${produto.imagem}" alt="${produto.nome}" onerror="this.src='img/placeholder.png'">
+            <img src="${imagemSrc}" alt="${produto.nome}" onerror="this.src='img/placeholder.png'">
             <div class="card-info">
                 <h3>${produto.nome}</h3>
                 <p>${produto.ingredientes}</p>

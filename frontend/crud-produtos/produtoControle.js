@@ -86,6 +86,7 @@ async function salvar() {
     const nome = document.getElementById("nome").value;
     const ingredientes = document.getElementById("ingredientes").value;
     const preco = parseFloat(document.getElementById("preco").value);
+    const inputImagem = document.getElementById("imagem");
 
     if (!id || !nome || !ingredientes || isNaN(preco)) {
         mostrarAviso("Preencha todos os campos corretamente!");
@@ -93,12 +94,28 @@ async function salvar() {
     }
 
     try {
-        // Gera automaticamente o nome da imagem baseado no ID
-        const imagem = `lanche${id}.png`;
+        // Nome padrão da imagem
+        const imagem = `img/lanche${id}.png`;
         
         const novoProduto = { id, imagem, nome, ingredientes, preco };
         let metodo = 'POST';
         let url = 'http://localhost:3000/produtos';
+
+        // Se há uma imagem selecionada, faz o upload
+        if (inputImagem.files.length > 0) {
+            const formData = new FormData();
+            formData.append('imagem', inputImagem.files[0]);
+            formData.append('id', id);
+            
+            const uploadResponse = await fetch('http://localhost:3000/upload-imagem', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (!uploadResponse.ok) {
+                throw new Error('Falha no upload da imagem');
+            }
+        }
 
         switch (oQueEstaFazendo) {
             case 'inserindo':
@@ -140,6 +157,14 @@ function mostrarDadosProduto(produto) {
     document.getElementById("nome").value = produto.nome;
     document.getElementById("ingredientes").value = produto.ingredientes;
     document.getElementById("preco").value = produto.preco;
+    
+    // Mostra a imagem atual (se existir)
+    const imgPreview = document.getElementById("imagem-preview");
+    if (imgPreview) {
+        imgPreview.src = `../img/lanche${produto.id}.png`;
+        imgPreview.style.display = 'block';
+    }
+    
     bloquearAtributos(true);
 }
 
@@ -147,6 +172,14 @@ function limparAtributos() {
     document.getElementById("nome").value = "";
     document.getElementById("ingredientes").value = "";
     document.getElementById("preco").value = "";
+    document.getElementById("imagem").value = "";
+    
+    const imgPreview = document.getElementById("imagem-preview");
+    if (imgPreview) {
+        imgPreview.src = "";
+        imgPreview.style.display = 'none';
+    }
+    
     bloquearAtributos(true);
 }
 
@@ -172,12 +205,9 @@ function mostrarAviso(mensagem) {
 function listar() {
     let html = "";
     listaProduto.forEach(produto => {
-        // Usa o padrão lanche+id.png para as imagens
-        const imagemSrc = `../img/lanche${produto.id}.png`;
-        
         html += `
             <div class="produto-item">
-                <img src="${imagemSrc}" alt="${produto.nome}" onerror="this.src='../img/sem-imagem.png'" width="100">
+                <img src="../img/lanche${produto.id}.png" alt="${produto.nome}" onerror="this.src='../img/sem-imagem.png'" width="100">
                 <div>
                     <strong>ID: ${produto.id}</strong> - ${produto.nome}<br>
                     <small>Ingredientes: ${produto.ingredientes}</small><br>
